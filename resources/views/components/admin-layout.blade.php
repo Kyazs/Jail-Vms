@@ -34,5 +34,5 @@
         });
     </script>
 </body>
-
+<script src="{{ asset('js/modal.js') }}"></script>
 </html>

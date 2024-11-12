@@ -49,13 +49,14 @@
                             <td class="px-6 py-4">jc@gmail.com</td>
                             <td class="px-6 py-4">10-10-2024</td>
                             <td class="px-6 py-4">
-                                <a href="#" class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-600">View</a>
+                                <a href="#" onclick="toggleModal('viewPendingUserModal')" class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-600">View</a>
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
+        @include('/components/modals/view-pending-user')
         <div class="mt-4">
             <div class="flex flex-col items-center">
                 <!-- Help text -->
