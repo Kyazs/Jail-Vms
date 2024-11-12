@@ -1,5 +1,4 @@
 <x-layout>
-    <x-userSidebar>
         <div class="flex flex-col p-4">
             <h2 class="text-2xl font-bold mb-6 text-gray-800 dark:text-white">PROFILE</h2>
             <div class="bg-gray-100 dark:bg-gray-900 shadow-lg rounded-lg p-6 mb-2">
@@ -26,5 +25,4 @@
                 <p class="text-gray-700 dark:text-gray-300"><strong>Email Address:</strong> john.casper@gmail.com</p>
             </div>
         </div>
-    </x-userSidebar>
 </x-layout>

@@ -1,7 +1,6 @@
 <x-admin-layout>
     <!-- Main Content -->
     <div class="main-content p-6">
-
         <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4">MODERATOR</h1>
         <div class="mt-6">
             <form class="max-w-md">
