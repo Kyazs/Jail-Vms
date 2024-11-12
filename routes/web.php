@@ -11,7 +11,7 @@ Route::get('/register', [RegisterController::class, 'show_registration_form'])->
 Route::post('/register', [RegisterController::class, 'register'])->name('register.submit');
 
 Route::view('/login', 'users.login');
-Route::view('/register', 'users.register');
+// Route::view('/register', 'users.register');
 Route::view('/dashboard', 'users.dashboard');
 Route::view('/UserProfile', 'users.profile');
 
