@@ -3,23 +3,28 @@
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\VisitorController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-Route::post('register', [RegisterController::class, 'register'])->name('register.submit');
+Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [RegisterController::class, 'register'])->name('register.submit');
 
-Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
-Route::post('login', [LoginController::class, 'login'])->name('login.submit');
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
 
-Route::post('logout', [LoginController::class, 'logout'])->name('logout');
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // Route::view('/login', 'users.login');
 // Route::view('/register', 'users.register');
-Route::view('/dashboard', 'users.dashboard');
-Route::view('/UserProfile', 'users.profile');
+
+Route::group(['middleware' => 'auth:visitor'], function () {
+    Route::get('/dashboard', [VisitorController::class, 'ShowDashboard'])->name('dashboard');
+    Route::get('/UserProfile', [VisitorController::class, 'ShowProfile'])->name('profile');
+});
+
 
 Route::view('/admin', 'admins.login');
 Route::view('/admin/dashboard', 'admins.dashboard');

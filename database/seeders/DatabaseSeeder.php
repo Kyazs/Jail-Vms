@@ -26,6 +26,10 @@ class DatabaseSeeder extends Seeder
             GendersTableSeeder::class,
             IdTypesTableSeeder::class,
             VisitStatusTableSeeder::class,
+            UserSeeder::class,
+            VisitorSeeder::class,
+            InmateSeeder::class,
+            VisitSeeder::class,
         ]);
         
     }

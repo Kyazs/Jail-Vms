@@ -35,12 +35,6 @@
                     @error('password')
                         <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
-                    <div class="flex items-center mt-2">
-                        <input id="remember" name="remember" type="checkbox" class="h-4 w-4 text-indigo-600 dark:text-indigo-400 focus:ring-indigo-600 dark:focus:ring-indigo-400 border-gray-300 dark:border-gray-700 rounded">
-                        <label for="remember" class="ml-2 block text-sm text-gray-900 dark:text-gray-100">
-                            Remember Me
-                        </label>
-                    </div>
                     <div class="text-sm">
                         <a href="#"
                             class="font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300">Forgot

@@ -3,74 +3,63 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Visitor;
+use App\Models\VisitorCredential;
+use App\Models\Blacklist;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
-use App\Models\VisitorCredential; // Import the VisitorCredentials model
+use Illuminate\Support\Facades\Auth; // Make sure to import this
 use Illuminate\Support\Facades\Hash;
+
 
 class LoginController extends Controller
 {
-    /**
-     * Show the application's login form.
-     *
-     * @return \Illuminate\View\View
-     */
     public function showLoginForm()
     {
-        return view('users.login');
+        if (Auth::guard('visitor')->check()) {
+            return redirect()->route('dashboard');
+        }
+        return view('users.login'); // Assuming you have a login view
     }
 
-    /**
-     * Handle a login request to the application.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
-     * @throws \Illuminate\Validation\ValidationException
-     */
     public function login(Request $request)
     {
-        $this->validateLogin($request);
-        $credentials = $request->only('username', 'password');
-        $visitorCredential = VisitorCredential::where('username', $credentials['username'])->first();
-        if ($visitorCredential && Hash::check($credentials['password'], $visitorCredential->password)) {
-            Auth::login($visitorCredential, $request->filled('remember'));
-            $request->session()->regenerate();
-            return redirect()->intended('/dashboard');
+        $credentials = $request->validate([
+            'username' => ['required', 'string'],
+            'password' => ['required', 'string'],
+        ]);
+        // Attempt Authentication
+        $visitorCredential = VisitorCredential::where('username', $credentials['username'])->with('visitor')->first();
+        if (!$visitorCredential) {
+            return back()->withErrors(['username' => 'Invalid credentials.']);
         }
-        throw ValidationException::withMessages([
-            'username' => [trans('auth.failed')],
-        ]);
+        $visitor = $visitorCredential->visitor; // Access the related visitor
+        if ($visitor) {
+            if ($visitor->is_deleted == 1) {
+                return back()->withErrors(['username' => 'Your account has been deleted.']);
+            }
+            if ($visitor->is_verified == 0) {
+                return back()->withErrors(['username' => 'Your account is pending verification.']);
+            }
+            // Check if the visitor is blacklisted
+            $blacklist = Blacklist::where('visitor_id', $visitor->visitor_id)->first();
+            if ($blacklist) {
+                return back()->withErrors(['username' => 'Your account has been blacklisted. Go to the ZCJ to comply.']);
+            }
+            if (Hash::check($credentials['password'], $visitorCredential->password)) {
+                // Authenticate the user
+                Auth::guard('visitor')->login($visitor);
+                $request->session()->regenerate();
+                return redirect()->intended(route('dashboard')); // Redirect to intended URL or dashboard
+            }
+        }
+        return back()->withErrors(['username' => 'Invalid credentials.']);
     }
 
 
-    /**
-     * Validate the user login request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return void
-     * @throws \Illuminate\Validation\ValidationException
-     */
-    protected function validateLogin(Request $request)
-    {
-        $request->validate([
-            'username' => 'required|string',
-            'password' => 'required|string',
-        ]);
-    }
-
-    /**
-     * Log the user out of the application.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
+    //Logout method
     public function logout(Request $request)
     {
-        Auth::logout();
-
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
 
         return redirect('/');
