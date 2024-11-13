@@ -9,6 +9,19 @@
         <div class="mt-10">
             <form class="space-y-6" action="{{ route('register.submit') }}" method="POST" enctype="multipart/form-data">
                 @csrf <!-- CSRF token for security -->
+                <!-- Display Validation Errors -->
+                @if ($errors->any())
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                        role="alert">
+                        <strong class="font-bold">Whoops!</strong>
+                        <span class="block sm:inline">There were some problems with your input.</span>
+                        <ul class="mt-3 list-disc list-inside text-sm text-red-600">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 <!-- User Information Section -->
                 <div>
                     <h3 class="text-lg font-semibold leading-6 text-gray-900 dark:text-gray-100 text-center">User
@@ -28,20 +41,6 @@
                                 @enderror
                             </div>
                         </div>
-                        <!-- Last Name -->
-                        <div>
-                            <label for="last_name"
-                                class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100">Last
-                                Name</label>
-                            <div class="mt-2">
-                                <input id="last_name" name="last_name" type="text" required
-                                    value="{{ old('last_name') }}"
-                                    class="block w-full rounded-md border-0 px-4 py-2 text-gray-900 dark:text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-400 sm:text-sm sm:leading-6">
-                                @error('last_name')
-                                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
-                        </div>
                         <!-- Middle Name -->
                         <div>
                             <label for="middle_name"
@@ -56,21 +55,20 @@
                                 @enderror
                             </div>
                         </div>
-                        <!-- Contact Number -->
+                        <!-- Last Name -->
                         <div>
-                            <label for="contact_number"
-                                class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100">Contact
-                                Number</label>
+                            <label for="last_name"
+                                class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100">Last
+                                Name</label>
                             <div class="mt-2">
-                                <input id="contact_number" name="contact_number" type="text" required
-                                    value="{{ old('contact_number') }}"
+                                <input id="last_name" name="last_name" type="text" required
+                                    value="{{ old('last_name') }}"
                                     class="block w-full rounded-md border-0 px-4 py-2 text-gray-900 dark:text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-400 sm:text-sm sm:leading-6">
-                                @error('contact_number')
+                                @error('last_name')
                                     <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
                         </div>
-                        <!-- Birthdate -->
                         <!-- Birthdate -->
                         <div>
                             <label for="date_of_birth"
@@ -85,6 +83,20 @@
                                 @enderror
                             </div>
                         </div>
+                        <!-- Contact Number -->
+                        <div>
+                            <label for="contact_number"
+                                class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100">Contact
+                                Number</label>
+                            <div class="mt-2">
+                                <input id="contact_number" name="contact_number" type="number" required
+                                    value="{{ old('contact_number') }}"
+                                    class="block w-full rounded-md border-0 px-4 py-2 text-gray-900 dark:text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-400 sm:text-sm sm:leading-6">
+                                @error('contact_number')
+                                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
                         <label for="email"
                             class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100">Email</label>
                         <div class="mt-2">
@@ -94,75 +106,76 @@
                                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
-                    </div>
-                    <!-- Gender -->
-                    <div>
-                        <label for="gender_id"
-                            class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100">Gender</label>
-                        <div class="mt-2">
-                            <select id="gender_id" name="gender_id" required
-                                class="block w-full rounded-md border-0 px-4 py-2 text-gray-900 dark:text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-400 sm:text-sm sm:leading-6">
-                                <option value="">Select Gender</option>
-                                <option value="1" {{ old('gender_id') == 'Male' ? 'selected' : '' }}>Male
-                                </option>
-                                <option value="2" {{ old('gender_id') == 'Female' ? 'selected' : '' }}>Female
-                                </option>
-                                <option value="3" {{ old('gender_id') == 'Other' ? 'selected' : '' }}>Other
-                                </option>
-                            </select>
-                            @error('gender_id')
-                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
+                        <!-- Gender -->
+                        <div>
+                            <label for="gender_id"
+                                class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100">Gender</label>
+                            <div class="mt-2">
+                                <select id="gender_id" name="gender_id" required
+                                    class="block w-full rounded-md border-0 px-4 py-2 text-gray-900 dark:text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-400 sm:text-sm sm:leading-6">
+                                    <option value="" hidden>Select Gender</option>
+                                    <option value="1" {{ old('gender_id') == 'Male' ? 'selected' : '' }}>Male
+                                    </option>
+                                    <option value="2" {{ old('gender_id') == 'Female' ? 'selected' : '' }}>Female
+                                    </option>
+                                    <option value="3" {{ old('gender_id') == 'Other' ? 'selected' : '' }}>Other
+                                    </option>
+                                </select>
+                                @error('gender_id')
+                                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
                         </div>
-                    </div>
-                    <!-- ID Type -->
-                    <div>
-                        <label for="id_type"
-                            class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100">ID
-                            Type</label>
-                        <div class="mt-2">
-                            <select id="id_type" name="id_type" required
-                                class="block w-full rounded-md border-0 px-4 py-2 text-gray-900 dark:text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-400 sm:text-sm sm:leading-6">
-                                <option value="" hidden>Select ID Type</option>
-                                <option value="1" {{ old('id_type') == 'passport' ? 'selected' : '' }}>
-                                    Passport</option>
-                                <option value="2" {{ old('id_type') == 'drivers_license' ? 'selected' : '' }}>
-                                    Driver's
-                                    License</option>
-                                <option value="3" {{ old('id_type') == 'national_id' ? 'selected' : '' }}>National
-                                    ID
-                                </option>
-                                <option value="4" {{ old('id_type') == 'other' ? 'selected' : '' }}>
-                                    Other</option>
-                            </select>
-                            @error('id_type')
-                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
+                        <!-- ID Type -->
+                        <div>
+                            <label for="id_type"
+                                class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100">ID
+                                Type</label>
+                            <div class="mt-2">
+                                <select id="id_type" name="id_type" required
+                                    class="block w-full rounded-md border-0 px-4 py-2 text-gray-900 dark:text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-400 sm:text-sm sm:leading-6">
+                                    <option value="" hidden>Select ID Type</option>
+                                    <option value="1" {{ old('id_type') == 'passport' ? 'selected' : '' }}>
+                                        Passport</option>
+                                    <option value="2" {{ old('id_type') == 'drivers_license' ? 'selected' : '' }}>
+                                        Driver's
+                                        License</option>
+                                    <option value="3" {{ old('id_type') == 'national_id' ? 'selected' : '' }}>
+                                        National
+                                        ID
+                                    </option>
+                                    <option value="4" {{ old('id_type') == 'other' ? 'selected' : '' }}>
+                                        Other</option>
+                                </select>
+                                @error('id_type')
+                                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
                         </div>
-                    </div>
-                    <div>
-                        <label for="id_document"
-                            class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100">Upload
-                            Valid ID</label>
-                        <div class="mt-2">
-                            <input id="id_document" name="id_document" type="file" required
-                                class="block w-full rounded-md border-0 px-4 py-2 text-gray-900 dark:text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-400 sm:text-sm sm:leading-6">
-                            @error('id_document')
-                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
+                        <div>
+                            <label for="id_document"
+                                class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100">Upload
+                                Valid ID</label>
+                            <div class="mt-2">
+                                <input id="id_document" name="id_document" type="file" required
+                                    class="block w-full rounded-md border-0 px-4 py-2 text-gray-900 dark:text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-400 sm:text-sm sm:leading-6">
+                                @error('id_document')
+                                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
                         </div>
                     </div>
                 </div>
         </div>
 
         <!-- Address Section -->
-        <div>
+        <div class="mt-4">
             <h3 class="text-lg font-bold leading-6 text-gray-900 dark:text-gray-100 text-center">Address</h3>
             <div class="mt-4 space-y-6">
                 <!-- Address -->
                 <div>
                     <label for="address_street"
-                        class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100">Address</label>
+                        class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100">Street</label>
                     <div class="mt-2">
                         <input id="address_street" name="address_street" type="text" required
                             value="{{ old('address_street') }}"
@@ -212,12 +225,12 @@
                 </div>
                 <!-- Barangay -->
                 <div>
-                    <label for="barangay"
+                    <label for="address_barangay"
                         class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100">Barangay</label>
                     <div class="mt-2">
-                        <input id="barangay" name="barangay" type="text" required value="{{ old('barangay') }}"
+                        <input id="address_barangay" name="address_barangay" type="text" required value="{{ old('address_barangay') }}"
                             class="block w-full rounded-md border-0 px-4 py-2 text-gray-900 dark:text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-400 sm:text-sm sm:leading-6">
-                        @error('barangay')
+                        @error('address_barangay')
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
@@ -239,10 +252,10 @@
                 <!-- Address Zip -->
                 <div>
                     <label for="address_zip"
-                        class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100">Address
-                        Zip</label>
+                        class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100">
+                        Zip Code</label>
                     <div class="mt-2">
-                        <input id="address_zip" name="address_zip" type="text" required
+                        <input id="address_zip" name="address_zip" type="number" required
                             value="{{ old('address_zip') }}"
                             class="block w-full rounded-md border-0 px-4 py-2 text-gray-900 dark:text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-400 sm:text-sm sm:leading-6">
                         @error('address_zip')
@@ -254,7 +267,7 @@
         </div>
 
         <!-- Setup Account Section -->
-        <div>
+        <div class="mt-4">
             <h3 class="text-lg font-bold leading-6 text-gray-900 dark:text-gray-100 text-center">Setup Account
             </h3>
             <div class="mt-4 space-y-6">

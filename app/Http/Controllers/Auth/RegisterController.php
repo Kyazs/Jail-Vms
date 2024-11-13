@@ -26,14 +26,14 @@ class RegisterController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:visitors'], // Unique email for visitors
             'contact_number' => ['required', 'unique:visitors', 'regex:/^(09)[0-9]{9}$/'],
             'date_of_birth' => ['required', 'date', 'before:today'],
-            'gender_id' => ['required', 'exists:genders,gender_id'],
+            'gender_id' => ['required', 'exists:genders,id'],
             'country' => ['required', 'string', 'max:255'],
             'address_street' => ['required', 'string', 'max:255'],
             'address_city' => ['required', 'string', 'max:255'],
             'address_province' => ['required', 'string', 'max:255'],
             'address_barangay' => ['required', 'string', 'max:255'],
             'address_zip' => ['required', 'string', 'max:10'],
-            'id_type' => ['required', 'exists:id_types,id_type_id'],
+            'id_type' => ['required', 'exists:id_types,id'],
             'id_document' => ['required', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:2048'],
             'username' => ['required', 'string', 'max:255', 'unique:visitor_credentials'],
             'password' => ['required', 'string', 'min:8', 'confirmed'], // Password confirmation
@@ -65,7 +65,7 @@ class RegisterController extends Controller
         // 4. Create the VisitorCredential record
         $visitor->credentials()->create([
             'username' => $request->input('username'),
-            'password_hash' => Hash::make($request->input('password')),
+            'password' => Hash::make($request->input('password')),
         ]);
         // 5. (Optional) Send a verification email
         return redirect()->route('login')->with('success', 'Registration successful. Your account is pending approval.');

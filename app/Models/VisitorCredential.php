@@ -2,16 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class VisitorCredential extends Model
+class VisitorCredential extends Authenticatable
 {
     protected $table = 'visitor_credentials';
 
     protected $fillable = [
         'visitor_id',
         'username',
-        'password_hash',
+        'password',
         'is_deleted',
     ];
 

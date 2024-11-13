@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::create('visitor_credentials', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('visitor_id')->constrained('visitors');
+            $table->foreignId('visitor_id');
             $table->string('username', 100)->unique();
             $table->string('password');
             $table->boolean('is_deleted')->default(false);
+
+            $table->foreign('visitor_id')->references('id')->on('visitors')->onDelete('cascade');
         });
     }
 
