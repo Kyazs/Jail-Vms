@@ -18,11 +18,15 @@ class UserSeeder extends Seeder
             [
                 'username' => 'admin',
                 'password' => Hash::make('password'),
+                'first_name' => 'Steve',
+                'last_name' => 'Doe',
                 'role_id' => 1
             ],
             [
                 'username' => 'admin2',
                 'password' => Hash::make('password'),
+                'first_name' => 'john',
+                'last_name' => 'Doe',
                 'role_id' => 2,
             ]
         ]);

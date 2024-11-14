@@ -72,4 +72,5 @@ class RegisterController extends Controller
         // 5. (Optional) Send a verification email
         return redirect()->route('login')->with('success', 'Registration successful. Your account is pending approval.');
     }
+
 }

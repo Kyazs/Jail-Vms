@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -23,7 +24,6 @@ class AdminController extends Controller
                 'visits.id as visit_id'
             )
             ->paginate(10);
-
         $totalCount = DB::table('visits')
             ->join('visit_status', 'visits.status_id', '=', 'visit_status.id')
             ->select('visit_status.status_name as status_name', DB::raw('COUNT(*) as count'))
@@ -36,11 +36,6 @@ class AdminController extends Controller
     public function inmates()
     {
         return view('admins.inmate');
-    }
-
-    public function user_mod()
-    {
-        return view('admins.users.moderator');
     }
 
     public function user_reg()

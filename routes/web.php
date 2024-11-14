@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VisitorController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\InmateController;
+use App\Http\Controllers\ModeratorController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -42,7 +43,11 @@ Route::group(['middleware' => 'auth'], function () {
     // Route::get('/admin/inmate/{id}/edit', [AdminController::class, 'edit'])->name('admin.inmate.edit');
     // Route::put('/admin/inmate/{id}', [AdminController::class, 'update'])->name('admin.inmate.update');
     // Route::delete('/admin/inmate/{id}', [AdminController::class, 'destroy'])->name('admin.inmate.destroy');
-    Route::get('/admin/user/moderator', [AdminController::class, 'user_mod'])->name('admins.users.moderator');
+
+    Route::get('/admin/user/moderator', [ModeratorController::class, 'show'])->name('admins.users.moderator');
+    Route::post('/admin/user/moderator', [ModeratorController::class, 'store'])->name('admins.users.moderator.store');
+    Route::get('/admin/moderator/search', [ModeratorController::class, 'mod_search'])->name('admins.users.moderator.search');
+
     Route::get('/admin/user/registered', [AdminController::class, 'user_reg'])->name('admins.users.registered');
     Route::get('/admin/user/pending', [AdminController::class, 'user_pend'])->name('admins.users.pending');
     Route::get('/admin/user/blacklisted', [AdminController::class, 'user_black'])->name('admins.users.blacklist');
