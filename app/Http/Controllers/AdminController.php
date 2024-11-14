@@ -38,13 +38,51 @@ class AdminController extends Controller
         return view('admins.inmate');
     }
 
+    /**
+     * Display a listing of the verified users.
+     */
     public function user_reg()
     {
-        return view('admins.users.registered');
+        $records = DB::table('visitors')
+            ->join('genders', 'visitors.gender_id', '=', 'genders.id')
+            ->join('visitor_credentials', 'visitors.id', '=', 'visitor_credentials.visitor_id')
+            ->select(
+                'visitors.id as visitor_id',
+                'visitors.first_name',
+                'visitors.last_name',
+                'visitors.email',
+                'visitors.contact_number',
+                'visitors.date_of_birth',
+                'visitor_credentials.username',
+                'visitors.created_at',
+                'genders.gender_name',
+                DB::raw("CONCAT(visitors.address_city, ' ', visitors.address_barangay, ' ', visitors.address_province, ' ', visitors.country, ' ', visitors.address_zip) as address")
+            )
+            ->where('visitors.is_verified', '=', '1')
+            ->paginate(10);
+        return view('admins.users.registered', ['records' => $records]);
     }
 
     public function user_pend()
     {
+        $records = DB::table('visitors')
+            ->join('genders', 'visitors.gender_id', '=', 'genders.id')
+            ->join('visitor_credentials', 'visitors.id', '=', 'visitor_credentials.visitor_id')
+            ->select(
+                'visitors.id as visitor_id',
+                'visitors.first_name',
+                'visitors.last_name',
+                'visitors.email',
+                'visitors.contact_number',
+                'visitors.date_of_birth',
+                'visitor_credentials.username',
+                'visitors.created_at',
+                'genders.gender_name',
+                DB::raw("CONCAT(visitors.address_city, ' ', visitors.address_barangay, ' ', visitors.address_province, ' ', visitors.country, ' ', visitors.address_zip) as address")
+            )
+            ->where('visitors.is_verified', '=', '2')
+            ->paginate(10);
+        return view('admins.users.registered', ['records' => $records]);
         return view('admins.users.pending');
     }
 

@@ -49,19 +49,19 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/admin/moderator/search', [ModeratorController::class, 'mod_search'])->name('admins.users.moderator.search');
 
     Route::get('/admin/user/registered', [AdminController::class, 'user_reg'])->name('admins.users.registered');
+    Route::get('/admin/user/profile/{id}', [VisitorController::class, 'get_profile'])->name('users.profile.show');
+
     Route::get('/admin/user/pending', [AdminController::class, 'user_pend'])->name('admins.users.pending');
     Route::get('/admin/user/blacklisted', [AdminController::class, 'user_black'])->name('admins.users.blacklist');
 });
-
-
 
 Route::view('/admin', 'admins.login');
 // Route::view('/admin/dashboard', 'admins.dashboard');
 // Route::view('/admin/inmate', 'admins.inmate');                                                                                                                                                                                                                                                                                                                                                                                                                                                              111111                  
 // Route::view('/admin/user/moderator', 'admins.users.moderator');
-Route::view('/admin/user/registered', 'admins.users.registered');
-Route::view('/admin/user/pending', 'admins.users.pending');
-Route::view('/admin/user/blacklisted', 'admins.users.blacklist');
+// Route::view('/admin/user/registered', 'admins.users.registered');
+// Route::view('/admin/user/pending', 'admins.users.pending');
+// Route::view('/admin/user/blacklisted', 'admins.users.blacklist');
 
 Route::view('/admin/logs/pending', 'admins.logs.pending');
 Route::view('/admin/logs/ongoing', 'admins.logs.ongoing');
