@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
@@ -11,54 +12,49 @@ class AdminController extends Controller
      */
     public function index()
     {
-        //
+        $records = DB::table('visits')
+            ->join('inmates', 'visits.inmate_id', '=', 'inmates.id')
+            ->join('visitors', 'visits.visitor_id', '=', 'visitors.id')
+            ->select(
+                DB::raw("CONCAT(visitors.first_name, ' ', visitors.last_name) as visitor_name"),
+                DB::raw("CONCAT(inmates.first_name, ' ', inmates.last_name) as inmate_name"),
+                'visits.check_in_time',
+                'visits.check_out_time',
+                'visits.id as visit_id'
+            )
+            ->paginate(10);
+
+        $totalCount = DB::table('visits')
+            ->join('visit_status', 'visits.status_id', '=', 'visit_status.id')
+            ->select('visit_status.status_name as status_name', DB::raw('COUNT(*) as count'))
+            ->groupBy('visits.status_id', 'visit_status.status_name')
+            ->get();
+
+        return view('admins.dashboard', compact('records', 'totalCount'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function inmates()
     {
-        //
+        return view('admins.inmate');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function user_mod()
     {
-        //
+        return view('admins.users.moderator');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function user_reg()
     {
-        //
+        return view('admins.users.registered');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function user_pend()
     {
-        //
+        return view('admins.users.pending');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function user_black()
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return view('admins.users.blacklist');
     }
 }

@@ -11,6 +11,7 @@ class Inmate extends Model
     protected $fillable = [
         'first_name',
         'last_name',
+        'gender_id',
         'inmate_number',
         'cell_number',
     ];

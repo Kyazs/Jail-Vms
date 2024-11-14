@@ -124,6 +124,11 @@
                         </li>
                     </ul>
                 </li>
+                @php
+                    $user = Auth::user();
+                @endphp
+
+                @if ($user && $user->role_id == 1)
                 <li>
                     <a href="/admin/audit"
                         class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 group">
@@ -131,6 +136,7 @@
                         <span class="flex-1 ms-3 whitespace-nowrap">Audit Log</span>
                     </a>
                 </li>
+                @endif
                 <li>
                     <a href="#"
                         class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 group">
@@ -139,7 +145,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#"
+                    <a href="/logout"
                         class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 group">
                         <i class="material-icons text-gray-400">logout</i>
                         <span class="flex-1 ms-3 whitespace-nowrap">Logout</span>

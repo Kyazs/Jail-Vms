@@ -9,7 +9,7 @@ use App\Models\Blacklist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth; // Make sure to import this
 use Illuminate\Support\Facades\Hash;
-
+use App\Models\User;
 
 class LoginController extends Controller
 {
@@ -55,6 +55,39 @@ class LoginController extends Controller
         return back()->withErrors(['username' => 'Invalid credentials.']);
     }
 
+    // 
+    // admin login
+    // 
+    public function showAdminLoginForm()
+    {
+        if (Auth::guard('web')->check()) {
+            return redirect()->route('admin.dashboard');
+        }
+        return view('admins.login'); // Assuming you have a login view
+    }
+    public function loginAdmin(Request $request)
+    {
+        $credentials = $request->validate([
+            'username' => ['required', 'string'],
+            'password' => ['required', 'string'],
+        ]);
+        // Ensure username and password are present
+        if (!$request->has(['username', 'password'])) {
+            return back()->withErrors(['username' => 'Username and password are required.']);
+        }
+        // Attempt Authentication
+        $user = User::where('username', $credentials['username'])->first();
+        if (!$user) {
+            return back()->withErrors(['username' => 'Invalid credentials.']);
+        }
+        if (Hash::check($credentials['password'], $user->password)) {
+            // Authenticate the user
+            Auth::guard('web')->login($user);
+            $request->session()->regenerate();
+            return redirect()->intended(route('admins.dashboard')); // Redirect to intended URL or dashboard
+        }
+        return back()->withErrors(['username' => 'Invalid credentials.']);
+    }
 
     //Logout method
     public function logout(Request $request)

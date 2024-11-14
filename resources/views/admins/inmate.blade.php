@@ -1,49 +1,47 @@
 <x-admin-layout>
     <main>
-
-
+        <div class="flex justify-end m-4">
+            <a href="#" onclick="toggleModal('addInmateModal')" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Add Inmate</a>
+        </div>
+        @include('/components/modals/add-inmate-modal')
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
-                        <th scope="col" class="px-6 py-3">
-                            Inmate ID
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Full Name
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Gender
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Birthdate
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Action
-                        </th>
+                        @foreach (['Inmate ID', 'Full Name', 'Gender', 'Cell Number', 'Created', 'Action'] as $header)
+                            <th scope="col" class="px-6 py-3">
+                                {{ $header }}
+                            </th>
+                        @endforeach
                     </tr>
                 </thead>
                 <tbody>
+                    @foreach ($inmate as  $int)
+                        
                     <tr
                         class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                         <th scope="row"
                             class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            JSDF21
+                            {{$int->inmate_number}}
                         </th>
                         <td class="px-6 py-4">
-                            THERIS CARROZ
+                            {{$int->first_name}} {{$int->last_name}}
                         </td>
                         <td class="px-6 py-4">
-                            Female
+                            {{$int->gender_name}}
                         </td>
                         <td class="px-6 py-4">
-                            01/01/2000
+                            {{$int->cell_number}}
+                        </td>
+                        <td class="px-6 py-4">
+                            {{$int->created_at}}
                         </td>
                         <td class="px-6 py-4">
                             <a href="#"
                                 class="font-medium text-blue-600 dark:text-blue-500 hover:underline">View</a>
                         </td>
                     </tr>
+                    @endforeach
                 </tbody>
             </table>
             <nav class="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"

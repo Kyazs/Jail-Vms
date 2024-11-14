@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller 
 {
@@ -11,8 +12,8 @@ class AuthController extends Controller
     {
         $credentials = $request->only('email', 'password');
 
-        if (auth()->attempt($credentials)) {
-            $user = auth()->user();
+        if (Auth::attempt($credentials)) {
+            $user = Auth::user();
             return response()->json(['user' => $user], 200);
         } else {
             return response()->json(['error' => 'Unauthorized'], 401);
