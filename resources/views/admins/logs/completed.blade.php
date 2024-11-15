@@ -3,18 +3,19 @@
     <div class="main-content p-6">
         <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4">COMPLETED VISITS</h1>
         <div class="mt-6 flex justify-between items-center">
-            <form class="flex-grow max-w-md mr-4">
+            <form class="flex-grow max-w-md mr-4" method="POST" action="{{ route('logs.search') }}">
+                @csrf
                 <label for="default-search"
                     class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                         <i class="material-icons text-gray-400">search</i>
                     </div>
-                    <input type="search" id="default-search"
+                    <input type="search" id="default-search" name="search"
                         class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 
                         focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 
                         dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="Search for a VisitOR...." required />
+                        placeholder="Search for a VisitOR...." />
                     <button type="submit"
                         class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
                 </div>
@@ -41,22 +42,34 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (range(1, 3) as $i)
+                    @foreach ($records as $rec)
                         <tr
                             class="relative odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                             <th scope="row"
-                                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">AW1</th>
-                            <td class="px-6 py-4">ther carroz</td>
-                            <td class="px-6 py-4">John Carroz</td>
-                            <td class="px-6 py-4">Father</td>
-                            <td class="px-6 py-4">10:22 AM</td>
-                            <td class="px-6 py-4">11:30 AM</td>
-                            <td class="px-6 py-4">10-10-2024</td>
-                            <td class="px-6 py-4 overflow-hidden">
-                                <a href="#"
-                                    class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-600">View
-                                    Details
-                                </a>
+                                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                {{ $rec->visit_id }}</th>
+                            <td class="px-6 py-4">{{ $rec->visitor_name }}</td>
+                            <td class="px-6 py-4">{{ $rec->inmate_name }}</td>
+                            <td class="px-6 py-4">{{ $rec->relationship }}</td>
+                            <td class="px-6 py-4">{{ $rec->check_in_time }}</td>
+                            <td class="px-6 py-4">{{ $rec->check_out_time }}</td>
+                            <td class="px-6 py-4">{{ $rec->date }}</td>
+                            <td class="px-2 py-4 overflow-hidden">
+                                <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown{{ $rec->visitor_id }}"
+                                    type="button">
+                                    <i
+                                        class="material-icons text-gray-200 hover:text-blue-700 dark:hover:text-blue-700">more_horiz</i>
+                                </button>
+                                <div id="dropdown{{ $rec->visitor_id }}"
+                                    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-32 dark:bg-gray-700 absolute mt-2 right-0">
+                                    <ul class="py-2" aria-labelledby="dropdownDefaultButton">
+                                        <li>
+                                            <a href="{{ route('users.profile.show', ['id' => $rec->visitor_id]) }}"
+                                                class="block px-3 py-1 text-blue-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-blue-500">View
+                                                Details</a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </td>
                         </tr>
                     @endforeach

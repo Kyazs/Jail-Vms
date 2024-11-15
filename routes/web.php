@@ -7,6 +7,7 @@ use App\Http\Controllers\VisitorController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\InmateController;
 use App\Http\Controllers\ModeratorController;
+use App\Http\Controllers\VisitController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -63,6 +64,17 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/admin/user/blacklisted/{id}', [AdminController::class, 'add_blacklist'])->name('admins.users.add_to_blacklist');
     // REMOVE FROM BLACKLISTED
     Route::get('/admin/user/blacklisted/{id}', [AdminController::class, 'remove_blacklist'])->name('admins.users.remove_from_blacklist');
+
+    // showing the pending visits
+    Route::get('/admin/visit/pending', [VisitController::class, 'pending_visit'])->name('logs.pending');
+    Route::get('/admin/visit/confirm/{id}', [VisitController::class, 'confirm_visit'])->name('visit.confirm');
+    Route::get('/admin/visit/reject/{id}', [VisitController::class, 'reject_visit'])->name('visit.reject');
+
+    // showing the ongoing visits
+    Route::get('/admin/visit/ongoing', [VisitController::class, 'ongoing_visit'])->name('logs.ongoing');
+    Route::get('/admin/visit/completed', [VisitController::class, 'completed_visit'])->name('logs.completed');
+    Route::post('/admin/visit/search', [VisitController::class, 'search_visit'])->name('logs.search');
+
 });
 
 Route::view('/admin', 'admins.login');
@@ -73,7 +85,7 @@ Route::view('/admin', 'admins.login');
 // Route::view('/admin/user/pending', 'admins.users.pending');
 // Route::view('/admin/user/blacklisted', 'admins.users.blacklist');
 
-Route::view('/admin/logs/pending', 'admins.logs.pending');
+// Route::view('/admin/logs/pending', 'admins.logs.pending');
 Route::view('/admin/logs/ongoing', 'admins.logs.ongoing');
 Route::view('/admin/logs/completed', 'admins.logs.completed');
 

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('visitor_id');
             $table->unsignedBigInteger('inmate_id');
+            $table->string('relationship');
             $table->timestamp('check_in_time')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('check_out_time')->nullable();
             $table->unsignedBigInteger('status_id')->default(1); // Changed to unsignedBigInteger

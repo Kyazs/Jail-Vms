@@ -17,6 +17,7 @@ class VisitSeeder extends Seeder
             [
                 'visitor_id' => 1,
                 'inmate_id' => 1,
+                'relationship' => 'Friend',
                 'check_in_time' => now(),
                 'check_out_time' => now()->addHours(1),
                 'status_id' => 1,
@@ -25,6 +26,7 @@ class VisitSeeder extends Seeder
             [
                 'visitor_id' => 1,
                 'inmate_id' => 2,
+                'relationship' => 'Husband',
                 'check_in_time' => now(),
                 'check_out_time' => now()->addHours(2),
                 'status_id' => 2,

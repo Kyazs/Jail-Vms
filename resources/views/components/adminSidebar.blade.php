@@ -79,17 +79,17 @@
                     </button>
                     <ul id="dropdown-reports" class="hidden py-2 space-y-2">
                         <li>
-                            <a href="/admin/logs/pending"
+                            <a href="{{route('logs.pending')}}"
                                 class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-200 dark:text-white dark:hover:bg-gray-600">Pending
                                 Visits</a>
                         </li>
                         <li>
-                            <a href="/admin/logs/ongoing"
+                            <a href="{{route('logs.ongoing')}}"
                                 class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-200 dark:text-white dark:hover:bg-gray-600">Ongoing
                                 Visits</a>
                         </li>
                         <li>
-                            <a href="/admin/logs/completed"
+                            <a href="{{route('logs.completed')}}"
                                 class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-200 dark:text-white dark:hover:bg-gray-600">Completed
                                 Visits</a>
                         </li>
@@ -127,7 +127,6 @@
                 @php
                     $user = Auth::user();
                 @endphp
-
                 @if ($user && $user->role_id == 1)
                 <li>
                     <a href="/admin/audit"

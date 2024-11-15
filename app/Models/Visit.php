@@ -25,6 +25,7 @@ class Visit extends Model
         'inmate_id',
         'check_in_time',
         'check_out_time',
+        'relationship',
         'status_id',
         'visit_duration'
     ];

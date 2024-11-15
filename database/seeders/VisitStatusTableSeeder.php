@@ -17,6 +17,7 @@ class VisitStatusTableSeeder extends Seeder
             ['status_name' => 'in progress'],
             ['status_name' => 'completed'],
             ['status_name' => 'cancelled'],
+            ['status_name' => 'pending'],
         ]);
     }
 }
