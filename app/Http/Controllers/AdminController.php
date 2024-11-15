@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\Visitor;
 
 class AdminController extends Controller
 {
@@ -46,6 +47,10 @@ class AdminController extends Controller
         $records = DB::table('visitors')
             ->join('genders', 'visitors.gender_id', '=', 'genders.id')
             ->join('visitor_credentials', 'visitors.id', '=', 'visitor_credentials.visitor_id')
+            ->leftJoin('blacklist', function ($join) {
+                $join->on('visitors.id', '=', 'blacklist.visitor_id')
+                    ->where('blacklist.is_deleted', '=', 0);
+            })
             ->select(
                 'visitors.id as visitor_id',
                 'visitors.first_name',
@@ -59,16 +64,92 @@ class AdminController extends Controller
                 DB::raw("CONCAT(visitors.address_city, ' ', visitors.address_barangay, ' ', visitors.address_province, ' ', visitors.country, ' ', visitors.address_zip) as address")
             )
             ->where('visitors.is_verified', '=', '1')
+            ->whereNull('blacklist.id') // Exclude if there's any active blacklist entry
             ->paginate(10);
+
         return view('admins.users.registered', ['records' => $records]);
     }
 
+    // show the pending visitor profile on admin side
     public function user_pend()
     {
         $records = DB::table('visitors')
             ->join('genders', 'visitors.gender_id', '=', 'genders.id')
+            ->join('id_types', 'visitors.id_type', '=', 'id_types.id')
             ->join('visitor_credentials', 'visitors.id', '=', 'visitor_credentials.visitor_id')
             ->select(
+                'visitors.*',
+                'visitor_credentials.username',
+                'genders.gender_name',
+                'id_types.id_type_name as id_name',
+                DB::raw("CONCAT(visitors.address_city, ' ', visitors.address_barangay, ' ', visitors.address_province, ' ', visitors.country, ' ', visitors.address_zip) as address")
+            )
+            ->where('visitors.is_verified', '=', '0')
+            ->paginate(10);
+        return view('admins.users.pending', compact('records'));
+    }
+    // confirm the pending visitor
+    public function confirm_visitor($id)
+    {
+        DB::table('visitors')
+            ->where('id', $id)
+            ->update(['is_verified' => 1]);
+        return redirect()->route('admins.users.pending')->with('success', 'Visitor has been confirmed');
+    }
+    // reject the pending visitor
+    public function reject_visitor($id)
+    {
+        DB::table('visitors')
+            ->where('id', $id)
+            ->delete();
+        return redirect()->route('admins.users.pending')->with('success', 'Visitor has been rejected and removed from the system');
+    }
+
+    // show the visitor profile on admin side
+    public function get_profile($id)
+    {
+        // Retrieve the visitor's profile
+        $visitor = DB::table('visitors')
+            ->join('genders', 'visitors.gender_id', '=', 'genders.id')
+            ->join('visitor_credentials', 'visitors.id', '=', 'visitor_credentials.visitor_id')
+            ->join('id_types', 'visitors.id_type', '=', 'id_types.id')
+            ->where('visitors.id', $id)
+            ->select('visitors.*', 'visitor_credentials.*', 'genders.gender_name', 'id_types.id_type_name as id_name')
+            ->firstOrFail();
+        error_log('VISITOR_LOG:' . $id);
+        return view('admins.users.view-profile', compact('visitor'));
+    }
+
+    // add to blacklisted
+    public function add_blacklist(Request $request, $id)
+    {
+        $request->validate([
+            'reason' => 'required|string|max:255',
+        ]);
+        DB::table('blacklist')->insert([
+            'visitor_id' => $id,
+            'reason' => $request->input('reason'),
+            'created_at' => now(),
+        ]);
+        return redirect()->route('admins.users.registered')->with('success', 'Visitor has been added to the blacklist');
+    }
+    // remove from blacklist
+    public function remove_blacklist($id)
+    {
+        DB::table('blacklist')
+            ->where('visitor_id', $id)
+            ->update(['is_deleted' => 1]);
+        return redirect()->route('admins.users.blacklist')->with('success', 'Visitor has been removed from the blacklist');
+    }
+    // show blacklisted persons
+    public function user_black()
+    {
+        $records = DB::table('visitors')
+            ->join('blacklist', 'visitors.id', '=', 'blacklist.visitor_id')
+            ->join('visitor_credentials', 'visitors.id', '=', 'visitor_credentials.visitor_id')
+            ->join('genders', 'visitors.gender_id', '=', 'genders.id')
+            ->select(
+                'blacklist.id as blacklist_id',
                 'visitors.id as visitor_id',
                 'visitors.first_name',
                 'visitors.last_name',
@@ -78,16 +159,12 @@ class AdminController extends Controller
                 'visitor_credentials.username',
                 'visitors.created_at',
                 'genders.gender_name',
-                DB::raw("CONCAT(visitors.address_city, ' ', visitors.address_barangay, ' ', visitors.address_province, ' ', visitors.country, ' ', visitors.address_zip) as address")
+                DB::raw("CONCAT(visitors.address_city, ' ', visitors.address_barangay, ' ', visitors.address_province, ' ', visitors.country, ' ', visitors.address_zip) as address"),
+                'blacklist.reason',
+                'blacklist.created_at as blacklisted_at'
             )
-            ->where('visitors.is_verified', '=', '2')
+            ->where('blacklist.is_deleted', '=', '0')
             ->paginate(10);
-        return view('admins.users.registered', ['records' => $records]);
-        return view('admins.users.pending');
-    }
-
-    public function user_black()
-    {
-        return view('admins.users.blacklist');
+        return view('admins.users.blacklist', compact('records'));
     }
 }

@@ -49,10 +49,18 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/admin/moderator/search', [ModeratorController::class, 'mod_search'])->name('admins.users.moderator.search');
 
     Route::get('/admin/user/registered', [AdminController::class, 'user_reg'])->name('admins.users.registered');
-    Route::get('/admin/user/profile/{id}', [VisitorController::class, 'get_profile'])->name('users.profile.show');
+    Route::get('/admin/user/profile/{id}', [AdminController::class, 'get_profile'])->name('users.profile.show');
 
     Route::get('/admin/user/pending', [AdminController::class, 'user_pend'])->name('admins.users.pending');
+    Route::get('/admin/user/pending/{id}', [AdminController::class, 'show_pending'])->name('users.pending.show');
+    Route::post('/admin/visitor/pending/{id}', [AdminController::class, 'confirm_visitor'])->name('visitor.confirm');
+    Route::post('/admin/visitor/pending{id}', [AdminController::class, 'reject_visitor'])->name('visitor.reject');
+
     Route::get('/admin/user/blacklisted', [AdminController::class, 'user_black'])->name('admins.users.blacklist');
+    // ADD TO BLACKLISTED
+    Route::post('/admin/user/blacklisted/{id}', [AdminController::class, 'add_blacklist'])->name('admins.users.add_to_blacklist');
+    // REMOVE FROM BLACKLISTED
+    Route::get('/admin/user/blacklisted/{id}', [AdminController::class, 'remove_blacklist'])->name('admins.users.remove_from_blacklist');
 });
 
 Route::view('/admin', 'admins.login');

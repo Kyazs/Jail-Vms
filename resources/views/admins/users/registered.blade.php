@@ -69,7 +69,7 @@
                                                 Password</a>
                                         </li>
                                         <li>
-                                            <a href="#"
+                                            <a href="#" onclick="toggleModal('addBlacklistModal')"
                                                 class="block px-3 py-1 text-purple-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-purple-500">Add
                                                 to Blacklist</a>
                                         </li>
@@ -77,6 +77,7 @@
                                 </div>
                             </td>
                         </tr>
+                        @include('components.modals.add-blacklist', ['record' => $rec])
                     @endforeach
                 </tbody>
             </table>

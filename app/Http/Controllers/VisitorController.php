@@ -48,20 +48,6 @@ class VisitorController extends Controller
         return view('users.profile', ['visitor' => $visitor]);
     }
 
-    // show the visitor profile on admin side
-    public function get_profile($id)
-    {
-        // Retrieve the visitor's profile
-        $visitor = DB::table('visitors')
-            ->join('genders', 'visitors.gender_id', '=', 'genders.id')
-            ->join('visitor_credentials', 'visitors.id', '=', 'visitor_credentials.visitor_id')
-            ->join('id_types', 'visitors.id_type', '=', 'id_types.id')
-            ->where('visitors.id', $id)
-            ->select('visitors.*', 'visitor_credentials.*' ,'genders.gender_name', 'id_types.id_type_name as id_name')
-            ->firstOrFail();
-        error_log('VISITOR_LOG:' . $id);
-        return view('admins.users.view-profile', compact('visitor'));
-    }
 
 
     // public function ShowQr()
