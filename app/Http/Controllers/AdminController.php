@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Visitor;
+use Illuminate\Support\Facades\Storage;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use App\Models\VisitorQrCode as VisitorQrCode;
 
 class AdminController extends Controller
 {
@@ -89,12 +91,28 @@ class AdminController extends Controller
         return view('admins.users.pending', compact('records'));
     }
     // confirm the pending visitor
+    // generate qr code for the visitor
     public function confirm_visitor($id)
     {
-        DB::table('visitors')
-            ->where('id', $id)
-            ->update(['is_verified' => 1]);
-        return redirect()->route('admins.users.pending')->with('success', 'Visitor has been confirmed');
+        $visitor = Visitor::find($id);
+
+        if (!$visitor) {
+            return redirect()->back()->with('error', 'Visitor not found.');
+        }
+        $qrData = 'visitor_' . $visitor->id . '_' . uniqid();
+        $qrCodeFileName = $visitor->id . '_' . uniqid() . '_qr.svg';
+        $qrCodePath = $qrCodeFileName;
+        // Ensure the directory exists
+        Storage::makeDirectory('qr_codes');
+        QrCode::size(300)->generate($qrData, Storage::path($qrCodePath));
+        VisitorQrCode::create([
+            'visitor_id' => $visitor->id,
+            'qr_code' => $qrData,
+            'qr_path' => $qrCodePath,
+        ]);
+
+        $visitor->update(['is_verified' => 1]);
+        return redirect()->route('admins.users.pending')->with('success', 'Visitor has been confirmed & QR code has been generated');
     }
     // reject the pending visitor
     public function reject_visitor($id)

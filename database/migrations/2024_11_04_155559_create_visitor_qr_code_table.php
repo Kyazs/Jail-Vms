@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('visitor_id')->constrained('visitors');
             $table->string('qr_code');
+            $table->string('qr_path'); // Add your column here
             $table->boolean('is_deleted')->default(false);
             $table->timestamps();
         });

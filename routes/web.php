@@ -19,7 +19,7 @@ Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::get('/logout', [LoginController::class, 'logout'])->name('logouts');
 
 // Route::view('/login', 'users.login');
 // Route::view('/register', 'users.register');
@@ -27,6 +27,8 @@ Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::group(['middleware' => 'auth:visitor'], function () {
     Route::get('/dashboard', [VisitorController::class, 'ShowDashboard'])->name('dashboard');
     Route::get('/UserProfile', [VisitorController::class, 'ShowProfile'])->name('profile');
+    Route::get('/visitor/qr-code', [VisitorController::class, 'showQr'])->name('show_qr');
+    Route::get('qr-codes/{filename}', [VisitorController::class, 'getQrCode'])->name('qr_codes');
 });
 // 
 // @ admin routes MIDDLEWARE

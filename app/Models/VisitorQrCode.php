@@ -11,6 +11,7 @@ class VisitorQrCode extends Model
     protected $fillable = [
         'visitor_id',
         'qr_code',
+        'qr_path',
         'is_deleted',
     ];
 
