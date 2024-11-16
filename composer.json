@@ -9,7 +9,8 @@
         "andreiio/blade-remix-icon": "^3.5",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
-        "ryangjchandler/blade-tabler-icons": "^2.3"
+        "ryangjchandler/blade-tabler-icons": "^2.3",
+        "simplesoftwareio/simple-qrcode": "^4.2"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

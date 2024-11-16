@@ -28,44 +28,45 @@
             <table class="w-full table-auto text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
-                        @foreach (['ID', 'Full Name', 'Birthdate', 'Gender', 'Address', 'Username', 'Contact Number', 'Email', 'Reason', 'Creation Date', 'Action'] as $header)
+                        @foreach (['Blacklist ID', 'Full Name', 'Gender', 'Address', 'Username', 'Contact Number', 'Email', 'Reason', 'Blacklisted Date', 'Action'] as $header)
                             <th scope="col" class="px-6 py-3">{{ $header }}</th>
                         @endforeach
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (range(1, 3) as $i)
+                    @foreach ($records as $rec)
                         <tr
                             class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                             <th scope="row"
-                                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">AW1</th>
-                            <td class="px-6 py-4">John Carroz</td>
-                            <td class="px-6 py-4">10/22/2003</td>
-                            <td class="px-6 py-4">Male</td>
-                            <td class="px-6 py-4">Guiwan, ZC</td>
-                            <td class="px-6 py-4">JohnC123</td>
-                            <td class="px-6 py-4">064522</td>
-                            <td class="px-6 py-4">jc@gmail.com</td>
-                            <td class="px-6 py-4">Blacklist Reason</td>
-                            <td class="px-6 py-4">10-10-2024</td>
-                            <td class="px-6 py-4 overflow-hidden">
-                                <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown{{ $i }}"
-                                    type="button">
+                                class="px-4 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                {{ $rec->blacklist_id }}</th>
+                            <td class="px-4 py-4">{{ $rec->first_name }} {{ $rec->last_name }} </td>
+                            <td class="px-4 py-4">{{ $rec->gender_name }}</td>
+                            <td class="px-4 py-4">{{ $rec->address }}</td>
+                            <td class="px-4 py-4">{{ $rec->username }}</td>
+                            <td class="px-4 py-4">{{ $rec->contact_number }}</td>
+                            <td class="px-4 py-4">{{ $rec->email }}</td>
+                            <td class="px-4 py-4">{{ $rec->reason }}</td>
+                            <td class="px-4 py-4">{{ $rec->blacklisted_at }}</td>
+                            <td class="px-4 py-4 overflow-hidden">
+                                <button id="dropdownDefaultButton"
+                                    data-dropdown-toggle="dropdown{{ $rec->blacklist_id }}" type="button">
                                     <i
                                         class="material-icons text-gray-200 hover:text-blue-700 dark:hover:text-blue-700">more_horiz</i>
                                 </button>
                                 <!-- Dropdown menu -->
-                                <div id="dropdown{{ $i }}"
+                                <div id="dropdown{{ $rec->blacklist_id }}"
                                     class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-32 dark:bg-gray-700 absolute mt-2 right-0">
                                     <ul class="py-2" aria-labelledby="dropdownDefaultButton">
                                         <li>
-                                            <a href="#"
+                                            <a href="{{ route('users.profile.show', ['id' => $rec->visitor_id]) }}"
                                                 class="block px-3 py-1 text-blue-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-blue-500">View</a>
                                         </li>
                                         <li>
-                                            <a href="#"
-                                                class="block px-3 py-1 text-purple-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-purple-500">Add
-                                                to Blacklist
+                                            <a href="{{ route('admins.users.remove_from_blacklist', ['id' => $rec->visitor_id]) }}"
+                                                onclick="return confirm('Are you sure you want to remove this user from blacklist');"
+                                                class="block px-3 py-1 text-purple-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-purple-500">Remove
+                                                From Blacklist
                                             </a>
                                         </li>
                                     </ul>
@@ -80,20 +81,14 @@
             <div class="flex flex-col items-center">
                 <!-- Help text -->
                 <span class="text-sm text-gray-700 dark:text-gray-400">
-                    Showing <span class="font-semibold text-gray-900 dark:text-white">1</span> to <span
-                        class="font-semibold text-gray-900 dark:text-white">10</span> of <span
-                        class="font-semibold text-gray-900 dark:text-white">100</span> Entries
+                    Showing <span
+                        class="font-semibold text-gray-900 dark:text-white">{{ $records->firstItem() }}</span> to <span
+                        class="font-semibold text-gray-900 dark:text-white">{{ $records->lastItem() }}</span> of <span
+                        class="font-semibold text-gray-900 dark:text-white">{{ $records->total() }}</span> Entries
                 </span>
-                <!-- Buttons -->
+                <!-- Pagination Links -->
                 <div class="inline-flex mt-2 xs:mt-0">
-                    <button
-                        class="flex items-center justify-center px-3 h-8 text-sm font-medium text-white bg-gray-800 rounded-s hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                        Prev
-                    </button>
-                    <button
-                        class="flex items-center justify-center px-3 h-8 text-sm font-medium text-white bg-gray-800 border-0 border-s border-gray-700 rounded-e hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                        Next
-                    </button>
+                    {{ $records->links('pagination::tailwind') }}
                 </div>
             </div>
         </div>

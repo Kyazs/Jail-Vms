@@ -20,7 +20,7 @@
                 </div>
             </form>
         </div>
-        <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-6">
+        <div class="sm:rounded-lg mt-6">
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
@@ -30,22 +30,39 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (range(1, 3) as $i)
+                    @foreach ($records as $rec)
                         <tr
                             class="relative odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                             <th scope="row"
-                                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">AW1</th>
-                            <td class="px-6 py-4">ther carroz</td>
-                            <td class="px-6 py-4">John Carroz</td>
-                            <td class="px-6 py-4">Father</td>
-                            <td class="px-6 py-4">10:22 AM</td>
-                            <td class="px-6 py-4"> - </td>
-                            <td class="px-6 py-4">10-10-2024</td>
-                            <td class="px-6 py-4 overflow-hidden">
-                                <a href="#"
-                                    class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-600">View
-                                    Details
-                                </a>
+                                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                {{ $rec->visitor_id }}</th>
+                            <td class="px-6 py-4">{{ $rec->visitor_name }}</td>
+                            <td class="px-6 py-4">{{ $rec->inmate_name }}</td>
+                            <td class="px-6 py-4">{{ $rec->relationship }}</td>
+                            <td class="px-6 py-4">{{ $rec->check_in_time }}</td>
+                            <td class="px-6 py-4">{{ $rec->check_out_time }}</td>
+                            <td class="px-6 py-4">{{ $rec->date }}</td>
+                            <td class="px-2 py-4 overflow-hidden">
+                                <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown{{ $rec->visitor_id }}"
+                                    type="button">
+                                    <i
+                                        class="material-icons text-gray-200 hover:text-blue-700 dark:hover:text-blue-700">more_horiz</i>
+                                </button>
+                                <div id="dropdown{{ $rec->visitor_id }}"
+                                    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-32 dark:bg-gray-700 absolute mt-2 right-0">
+                                    <ul class="py-2" aria-labelledby="dropdownDefaultButton">
+                                        <li>
+                                            <a href="{{ route('users.profile.show', ['id' => $rec->visitor_id]) }}"
+                                                class="block px-3 py-1 text-blue-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-blue-500">View
+                                                Details</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ route('visit.reject', ['id' => $rec->visit_id]) }}"
+                                                onclick="return confirm('Are you sure you want to FORCE END this person visit?');"
+                                                class="block px-3 py-1 text-red-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-red-500">Force End</a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </td>
                         </tr>
                     @endforeach
