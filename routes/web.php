@@ -7,6 +7,7 @@ use App\Http\Controllers\VisitorController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\InmateController;
 use App\Http\Controllers\ModeratorController;
+use App\Http\Controllers\ScannerController;
 use App\Http\Controllers\VisitController;
 
 Route::get('/', function () {
@@ -66,15 +67,22 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/admin/user/blacklisted/{id}', [AdminController::class, 'remove_blacklist'])->name('admins.users.remove_from_blacklist');
 
     // showing the pending visits
-    Route::get('/admin/visit/pending', [VisitController::class, 'pending_visit'])->name('logs.pending');
-    Route::get('/admin/visit/confirm/{id}', [VisitController::class, 'confirm_visit'])->name('visit.confirm');
-    Route::get('/admin/visit/reject/{id}', [VisitController::class, 'reject_visit'])->name('visit.reject');
-
     // showing the ongoing visits
+    // showing the completed visits
+    // search visits logs
+    Route::get('/admin/visit/pending', [VisitController::class, 'pending_visit'])->name('logs.pending');
     Route::get('/admin/visit/ongoing', [VisitController::class, 'ongoing_visit'])->name('logs.ongoing');
     Route::get('/admin/visit/completed', [VisitController::class, 'completed_visit'])->name('logs.completed');
     Route::post('/admin/visit/search', [VisitController::class, 'search_visit'])->name('logs.search');
+    Route::get('/admin/visit/confirm/{id}', [VisitController::class, 'confirm_visit'])->name('visit.confirm');
+    Route::get('/admin/visit/reject/{id}', [VisitController::class, 'reject_visit'])->name('visit.reject');
 
+    Route::get('/scanner', [ScannerController::class, 'landingpage'])->name('landingpage');
+    Route::get('/scanner/check-in', [ScannerController::class, 'checkin'])->name('checkin');
+    Route::get('/scanner/check-out', [ScannerController::class, 'checkout'])->name('checkout');
+    Route::post('/process-qr', [ScannerController::class, 'process_qr'])->name('process.qr');
+    Route::post('/check-out', [ScannerController::class, 'check_out'])->name('check.out');
+    Route::get('/scanner/search-inmate', [ScannerController::class, 'search_inmate'])->name('search.scanner.inmate');
 });
 
 Route::view('/admin', 'admins.login');
