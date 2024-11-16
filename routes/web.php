@@ -41,9 +41,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admins.dashboard');
     Route::get('/admin/inmate', [InmateController::class, 'show'])->name('admins.inmate');
     Route::post('/admin/inmate', [InmateController::class, 'store'])->name('admin.inmate.store');
+    Route::get('/admin/inmate/search', [InmateController::class, 'search'])->name('admin.inmate.search');
+    Route::post('/admin/inmate/delete/{id}', [InmateController::class, 'delete'])->name('admin.inmate.delete');
+    Route::put('/admin/inmate/update/{id}', [InmateController::class, 'update'])->name('admin.inmate.update');
     // Route::get('/admin/inmate/{id}', [AdminController::class, 'show'])->name('admin.inmate.show');
     // Route::get('/admin/inmate/{id}/edit', [AdminController::class, 'edit'])->name('admin.inmate.edit');
-    // Route::put('/admin/inmate/{id}', [AdminController::class, 'update'])->name('admin.inmate.update');
     // Route::delete('/admin/inmate/{id}', [AdminController::class, 'destroy'])->name('admin.inmate.destroy');
 
     Route::get('/admin/user/moderator', [ModeratorController::class, 'show'])->name('admins.users.moderator');
