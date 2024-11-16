@@ -5,26 +5,25 @@ use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VisitorController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\InmateController;
 use App\Http\Controllers\ModeratorController;
 use App\Http\Controllers\ScannerController;
 use App\Http\Controllers\VisitController;
 
+
+Route::view('/admin', 'admins.login');
+Route::get('/home', [AuthController::class, 'Authenticate'])->name('home');
 Route::get('/', function () {
     return view('welcome');
 });
 
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register'])->name('register.submit');
-
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
-
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/logout', [LoginController::class, 'logout'])->name('logouts');
-
-// Route::view('/login', 'users.login');
-// Route::view('/register', 'users.register');
 
 Route::group(['middleware' => 'auth:visitor'], function () {
     Route::get('/dashboard', [VisitorController::class, 'ShowDashboard'])->name('dashboard');
@@ -37,7 +36,6 @@ Route::group(['middleware' => 'auth:visitor'], function () {
 // 
 Route::get('/admin', [LoginController::class, 'showAdminLoginForm'])->name('admin.login');
 Route::post('/admin', [LoginController::class, 'loginAdmin'])->name('admin.login.submit');
-
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admins.dashboard');
@@ -84,17 +82,5 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/check-out', [ScannerController::class, 'check_out'])->name('check.out');
     Route::get('/scanner/search-inmate', [ScannerController::class, 'search_inmate'])->name('search.scanner.inmate');
 });
-
-Route::view('/admin', 'admins.login');
-// Route::view('/admin/dashboard', 'admins.dashboard');
-// Route::view('/admin/inmate', 'admins.inmate');                                                                                                                                                                                                                                                                                                                                                                                                                                                              111111                  
-// Route::view('/admin/user/moderator', 'admins.users.moderator');
-// Route::view('/admin/user/registered', 'admins.users.registered');
-// Route::view('/admin/user/pending', 'admins.users.pending');
-// Route::view('/admin/user/blacklisted', 'admins.users.blacklist');
-
-// Route::view('/admin/logs/pending', 'admins.logs.pending');
-Route::view('/admin/logs/ongoing', 'admins.logs.ongoing');
-Route::view('/admin/logs/completed', 'admins.logs.completed');
 
 Route::view('/admin/audit', 'admins.audit');
