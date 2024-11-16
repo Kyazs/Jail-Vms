@@ -22,12 +22,7 @@
         </section>
     </main>
     <x-footer />
-    @if (session('success'))
-        <div id="success-message"
-            class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white p-4 rounded shadow-lg">
-            {{ session('success') }}
-        </div>
-    @endif
+    <script src="{{ asset('js/function.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js" defer></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
