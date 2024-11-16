@@ -74,6 +74,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/admin/visit/search', [VisitController::class, 'search_visit'])->name('logs.search');
     Route::get('/admin/visit/confirm/{id}', [VisitController::class, 'confirm_visit'])->name('visit.confirm');
     Route::get('/admin/visit/reject/{id}', [VisitController::class, 'reject_visit'])->name('visit.reject');
+    Route::get('/admin/visit/force-end/{id}', [VisitController::class, 'force_end_visit'])->name('visit.force_end');
 
     Route::get('/scanner', [ScannerController::class, 'landingpage'])->name('landingpage');
     Route::get('/scanner/check-in', [ScannerController::class, 'checkin'])->name('checkin');

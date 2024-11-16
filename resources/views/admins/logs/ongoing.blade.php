@@ -35,7 +35,7 @@
                             class="relative odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                             <th scope="row"
                                 class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {{ $rec->visitor_id }}</th>
+                                {{ $rec->visit_id }}</th>
                             <td class="px-6 py-4">{{ $rec->visitor_name }}</td>
                             <td class="px-6 py-4">{{ $rec->inmate_name }}</td>
                             <td class="px-6 py-4">{{ $rec->relationship }}</td>
@@ -43,21 +43,21 @@
                             <td class="px-6 py-4">{{ $rec->check_out_time }}</td>
                             <td class="px-6 py-4">{{ $rec->date }}</td>
                             <td class="px-2 py-4 overflow-hidden">
-                                <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown{{ $rec->visitor_id }}"
+                                <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown{{ $rec->visit_id }}"
                                     type="button">
                                     <i
                                         class="material-icons text-gray-200 hover:text-blue-700 dark:hover:text-blue-700">more_horiz</i>
                                 </button>
-                                <div id="dropdown{{ $rec->visitor_id }}"
+                                <div id="dropdown{{ $rec->visit_id }}"
                                     class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-32 dark:bg-gray-700 absolute mt-2 right-0">
                                     <ul class="py-2" aria-labelledby="dropdownDefaultButton">
                                         <li>
-                                            <a href="{{ route('users.profile.show', ['id' => $rec->visitor_id]) }}"
+                                            <a href="{{ route('users.profile.show', ['id' => $rec->visit_id]) }}"
                                                 class="block px-3 py-1 text-blue-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-blue-500">View
                                                 Details</a>
                                         </li>
                                         <li>
-                                            <a href="{{ route('visit.reject', ['id' => $rec->visit_id]) }}"
+                                            <a href="{{ route('visit.force_end', ['id' => $rec->visit_id]) }}"
                                                 onclick="return confirm('Are you sure you want to FORCE END this person visit?');"
                                                 class="block px-3 py-1 text-red-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-red-500">Force End</a>
                                         </li>
