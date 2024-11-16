@@ -45,7 +45,7 @@ class ScannerController extends Controller
             $newVisit->inmate_id = $inmateId;
             $newVisit->relationship = $request->input('relationship');
             $newVisit->check_in_time = now();
-            $newVisit->status_id = 1;
+            $newVisit->status_id = 4;
             $newVisit->save();
             return redirect()->route('landingpage')->with('success', 'Check-in successful! Proceed to the Officer for verification.');
         }
@@ -65,7 +65,7 @@ class ScannerController extends Controller
             return redirect()->route('landingpage')->with('error', 'No active visit found for this QR code.');
         }
         // Check if the visit status is pending
-        if ($record->status_id == 1) { // Assuming 1 is the status for pending
+        if ($record->status_id == 4) { // Assuming 4 is the status for pending
             return redirect()->route('landingpage')->with('error', 'Visit is still pending. Go to the Officer for  verification');
         }
         // Perform Check-Out
