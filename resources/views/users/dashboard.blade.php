@@ -9,26 +9,25 @@
                         <th scope="col" class="px-6 py-3">Inmate Name</th>
                         <th scope="col" class="px-6 py-3">Check-in Time</th>
                         <th scope="col" class="px-6 py-3">Check-Out Time</th>
+                        <th scope="col" class="px-6 py-3">Duration</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                        <td class="px-6 py-4">2023-10-01</td>
-                        <td class="px-6 py-4">12345</td>
-                        <td class="px-6 py-4">John Doe</td>
-                        <td class="px-6 py-4">08:00 AM</td>
-                        <td class="px-6 py-4">05:00 PM</td>
-                    </tr>
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                        <td class="px-6 py-4">2023-10-02</td>
-                        <td class="px-6 py-4">67890</td>
-                        <td class="px-6 py-4">Jane Smith</td>
-                        <td class="px-6 py-4">09:00 AM</td>
-                        <td class="px-6 py-4">06:00 PM</td>
-                    </tr>
-                    </tr>
+                    @foreach ($visits as $visit)
+                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                            <td class="px-6 py-4">{{ $visit->check_in_time }}</td>
+                            <td class="px-6 py-4">{{ $visit->inmate_id }}</td>
+                            <td class="px-6 py-4">{{ $visit->inmate_name }}</td>
+                            <td class="px-6 py-4">{{ $visit->check_in_time }}</td>
+                            <td class="px-6 py-4">{{ $visit->check_out_time }}</td>
+                            <td class="px-6 py-4">{{ $visit->visit_duration }} min</td>
+                        </tr>
+                    @endforeach
                 </tbody>
             </table>
+            <div class="mt-4">
+                {{ $visits->links() }}
+            </div>
         </div>
     </div>
 </x-layout>

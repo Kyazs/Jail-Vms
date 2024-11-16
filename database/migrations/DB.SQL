@@ -1,0 +1,1 @@
+drop DATABASE jail_vms
