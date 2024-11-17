@@ -10,6 +10,10 @@ use App\Http\Controllers\ModeratorController;
 use App\Http\Controllers\ScannerController;
 use App\Http\Controllers\VisitController;
 
+Route::view('/aboutus', 'info.aboutus');
+Route::view('/contactus', 'info.contactus');
+
+
 Route::get('/', function () {
     return view('welcome');
 });
