@@ -36,7 +36,7 @@
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
-                        @foreach (['ID', 'Visitor Name', 'Inmate Name', 'Relationship', 'Time In', 'Time Out', 'Date', 'Action'] as $header)
+                        @foreach (['ID', 'Visitor Name', 'Inmate Name', 'Relationship', 'Time In', 'Time Out', 'Date', 'Duration', 'Status', 'Action'] as $header)
                             <th scope="col" class="px-6 py-3">{{ $header }}</th>
                         @endforeach
                     </tr>
@@ -54,13 +54,15 @@
                             <td class="px-6 py-4">{{ $rec->check_in_time }}</td>
                             <td class="px-6 py-4">{{ $rec->check_out_time }}</td>
                             <td class="px-6 py-4">{{ $rec->date }}</td>
+                            <td class="px-6 py-4">{{ $rec->duration }} | minutes</td>
+                            <td class="px-6 py-4"> {{ $rec->status_name }} </td>
                             <td class="px-2 py-4 overflow-hidden">
-                                <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown{{ $rec->visitor_id }}"
+                                <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown{{ $rec->visit_id }}"
                                     type="button">
                                     <i
                                         class="material-icons text-gray-200 hover:text-blue-700 dark:hover:text-blue-700">more_horiz</i>
                                 </button>
-                                <div id="dropdown{{ $rec->visitor_id }}"
+                                <div id="dropdown{{ $rec->visit_id }}"
                                     class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-32 dark:bg-gray-700 absolute mt-2 right-0">
                                     <ul class="py-2" aria-labelledby="dropdownDefaultButton">
                                         <li>
@@ -80,20 +82,14 @@
             <div class="flex flex-col items-center">
                 <!-- Help text -->
                 <span class="text-sm text-gray-700 dark:text-gray-400">
-                    Showing <span class="font-semibold text-gray-900 dark:text-white">1</span> to <span
-                        class="font-semibold text-gray-900 dark:text-white">10</span> of <span
-                        class="font-semibold text-gray-900 dark:text-white">100</span> Entries
+                    Showing <span
+                        class="font-semibold text-gray-900 dark:text-white">{{ $records->firstItem() }}</span> to <span
+                        class="font-semibold text-gray-900 dark:text-white">{{ $records->lastItem() }}</span> of <span
+                        class="font-semibold text-gray-900 dark:text-white">{{ $records->total() }}</span> Entries
                 </span>
-                <!-- Buttons -->
+                <!-- Pagination Links -->
                 <div class="inline-flex mt-2 xs:mt-0">
-                    <button
-                        class="flex items-center justify-center px-3 h-8 text-sm font-medium text-white bg-gray-800 rounded-s hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                        Prev
-                    </button>
-                    <button
-                        class="flex items-center justify-center px-3 h-8 text-sm font-medium text-white bg-gray-800 border-0 border-s border-gray-700 rounded-e hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                        Next
-                    </button>
+                    {{ $records->links() }}
                 </div>
             </div>
         </div>

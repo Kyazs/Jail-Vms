@@ -156,7 +156,7 @@ class AdminController extends Controller
     {
         DB::table('blacklist')
             ->where('visitor_id', $id)
-            ->update(['is_deleted' => 1]);
+            ->update(['is_deleted' => 1, 'updated_at' => now()]);
         return redirect()->route('admins.users.blacklist')->with('success', 'Visitor has been removed from the blacklist');
     }
     // show blacklisted persons
