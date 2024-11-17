@@ -11,6 +11,8 @@ use App\Http\Controllers\ModeratorController;
 use App\Http\Controllers\ScannerController;
 use App\Http\Controllers\VisitController;
 
+Route::view('/aboutus', 'info.aboutus');
+Route::view('/contactus', 'info.contactus');
 
 Route::view('/admin', 'admins.login');
 Route::get('/home', [AuthController::class, 'Authenticate'])->name('home');
