@@ -6,7 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class AuthController extends Controller 
+class AuthController extends Controller
 {
     public function login(Request $request)
     {
@@ -35,5 +35,19 @@ class AuthController extends Controller
         ]);
 
         return response()->json(['user' => $user], 201);
+    }
+
+    public function Authenticate()
+    {
+        if (Auth::check()) {
+            $user = Auth::user();
+            if (in_array($user->role_id, ['1', '2'])) {
+                return redirect()->route('admins.dashboard');
+            } else {
+                return redirect()->route('dashboard');
+            }
+        } else {
+            return redirect('/');
+        }
     }
 }

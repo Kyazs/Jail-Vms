@@ -74,11 +74,13 @@ class VisitController extends Controller
                 DB::raw("TIME(visits.check_out_time) as check_out_time"),
                 'visits.id as visit_id',
                 'visits.relationship',
+                'visits.visit_duration as duration',
                 'visit_status.status_name as status_name',
                 'visitors.contact_number',
                 'visitors.id as visitor_id',
                 'visitor_credentials.username as username'
             )
+            ->orderBy('visits.id')
             ->paginate(10);
         return view('/admins/logs/completed', compact('records'));
     }
@@ -94,8 +96,23 @@ class VisitController extends Controller
     {
         DB::table('visits')
             ->where('id', $id)
-            ->update(['status_id' => 3]);
+            ->update([
+                'status_id' => 5, 
+                'check_out_time' => now(), 
+                'visit_duration' => DB::raw('TIMESTAMPDIFF(MINUTE, check_in_time, now())')
+            ]);
         return redirect()->back()->with('success', 'Visit rejected successfully');
+    }
+    public function force_end_visit($id)
+    {
+        DB::table('visits')
+            ->where('id', $id)
+            ->update([
+                'status_id' => 2, 
+                'check_out_time' => now(), 
+                'duration' => DB::raw('TIMESTAMPDIFF(MINUTE, check_in_time, now())')
+            ]);
+        return redirect()->back()->with('info', 'Visit Force ended successfully');
     }
 
     public function search_visit(Request $request)
