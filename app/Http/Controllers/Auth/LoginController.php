@@ -61,7 +61,7 @@ class LoginController extends Controller
     public function showAdminLoginForm()
     {
         if (Auth::guard('web')->check()) {
-            return redirect()->route('admin.dashboard');
+            return redirect()->route('admins.dashboard');
         }
         return view('admins.login'); // Assuming you have a login view
     }

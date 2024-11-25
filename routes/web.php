@@ -12,7 +12,6 @@ use App\Http\Controllers\ScannerController;
 use App\Http\Controllers\VisitController;
 
 
-Route::view('/admin', 'admins.login');
 Route::get('/home', [AuthController::class, 'Authenticate'])->name('home');
 Route::get('/', function () {
     return view('welcome');
