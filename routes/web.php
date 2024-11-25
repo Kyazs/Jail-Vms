@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VisitorController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\analyticController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\InmateController;
 use App\Http\Controllers\ModeratorController;
@@ -37,7 +38,7 @@ Route::get('/admin', [LoginController::class, 'showAdminLoginForm'])->name('admi
 Route::post('/admin', [LoginController::class, 'loginAdmin'])->name('admin.login.submit');
 
 Route::group(['middleware' => 'auth'], function () {
-    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admins.dashboard');
+    Route::get('/admin/dashboard', [analyticController::class, 'index'])->name('admins.dashboard');
     Route::get('/admin/inmate', [InmateController::class, 'show'])->name('admins.inmate');
     Route::post('/admin/inmate', [InmateController::class, 'store'])->name('admin.inmate.store');
     Route::get('/admin/inmate/search', [InmateController::class, 'search'])->name('admin.inmate.search');

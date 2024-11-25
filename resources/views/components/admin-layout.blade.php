@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
@@ -25,9 +26,6 @@
     <x-footer />
     @include('components.Infromation-pop-up')
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
-    <script>
-
-    </script>
 </body>
 <script src="{{ asset('js/modal.js') }}"></script>
 <script src="{{ asset('js/function.js') }}"></script>
