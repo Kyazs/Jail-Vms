@@ -36,7 +36,7 @@ class ScannerController extends Controller
             if ($record->blacklist) {
                 return redirect()->route('landingpage')->with('error', 'This visitor is blacklisted and cannot check in.');
             }
-            return redirect()->route('landingpage')->with('error', 'Visitor already checked-in Proceed to the Officer for Verfication.');
+            return redirect()->route('landingpage')->with('error', 'Visitor already checked-in. Checkout or Proceed to the Officer for Verfication.');
         }
         // Validate inmate ID
         $inmateId = $request->input('inmate_id');

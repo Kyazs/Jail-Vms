@@ -66,7 +66,7 @@ class VisitorController extends Controller
 
     public function getQrCode($filename)
     {
-        $path = storage_path('app/private/qr_codes/' . $filename);
+        $path = storage_path('app/private/' . $filename);
         if (!file_exists($path)) {
             abort(404);
         }

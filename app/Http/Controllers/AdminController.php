@@ -101,14 +101,14 @@ class AdminController extends Controller
         }
         $qrData = 'visitor_' . $visitor->id . '_' . uniqid();
         $qrCodeFileName = $visitor->id . '_' . uniqid() . '_qr.svg';
-        $qrCodePath = $qrCodeFileName;
+        $qrCodePath = 'qr_codes/' . $qrCodeFileName;
         // Ensure the directory exists
         Storage::makeDirectory('qr_codes');
         QrCode::size(300)->generate($qrData, Storage::path($qrCodePath));
         VisitorQrCode::create([
             'visitor_id' => $visitor->id,
             'qr_code' => $qrData,
-            'qr_path' => $qrCodePath,
+            'qr_path' => $qrCodeFileName,
         ]);
 
         $visitor->update(['is_verified' => 1]);
