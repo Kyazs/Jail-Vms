@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VisitorController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\analyticController;
+use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\InmateController;
 use App\Http\Controllers\ModeratorController;
@@ -84,6 +85,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/process-qr', [ScannerController::class, 'process_qr'])->name('process.qr');
     Route::post('/check-out', [ScannerController::class, 'check_out'])->name('check.out');
     Route::get('/scanner/search-inmate', [ScannerController::class, 'search_inmate'])->name('search.scanner.inmate');
-});
 
-Route::view('/admin/audit', 'admins.audit');
+    // Route::view('/admin/audit', 'admins.audit');
+    Route::get('/admin/audit', [AuditLogController::class, 'showAudit'])->name('audit.log');
+    Route::get('/admin/audit/search', [AuditLogController::class, 'searchAudit'])->name('audit.search');
+});

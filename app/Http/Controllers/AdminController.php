@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Visitor;
+use App\Http\Controllers\AuditLogController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Models\VisitorQrCode as VisitorQrCode;
@@ -89,8 +91,11 @@ class AdminController extends Controller
             'qr_code' => $qrData,
             'qr_path' => $qrCodeFileName,
         ]);
-
         $visitor->update(['is_verified' => 1]);
+        // Register the Action in the Auditlog
+        $actionTypeId = 1;
+        $auditLogController = new AuditLogController();
+        $auditLogController->logAudit(Auth::id(), $actionTypeId, $visitor->id, null, null, 'Confirmed visitor');
         return redirect()->route('admins.users.pending')->with('success', 'Visitor has been confirmed & QR code has been generated');
     }
     // reject the pending visitor
@@ -99,7 +104,11 @@ class AdminController extends Controller
         DB::table('visitors')
             ->where('id', $id)
             ->delete();
-        return redirect()->route('admins.users.pending')->with('success', 'Visitor has been rejected and removed from the system');
+        // Register the Action in the Auditlog
+        $actionTypeId = 14;
+        $auditLogController = new AuditLogController();
+        $auditLogController->logAudit(Auth::id(), $actionTypeId, $id, null, null, 'Confirmed visitor');
+        return redirect()->route('admins.users.pending')->with('success', 'Visitor has been rejected and removed  from the system');
     }
 
     // show the visitor profile on admin side
@@ -128,6 +137,10 @@ class AdminController extends Controller
             'reason' => $request->input('reason'),
             'created_at' => now(),
         ]);
+        // Register the Action in the Auditlog
+        $actionTypeId = 3;
+        $auditLogController = new AuditLogController();
+        $auditLogController->logAudit(Auth::id(), $actionTypeId, $id, null, null, 'Blacklisted - ' . $request->input('reason'));
         return redirect()->route('admins.users.registered')->with('success', 'Visitor has been added to the blacklist');
     }
     // remove from blacklist
@@ -136,6 +149,11 @@ class AdminController extends Controller
         DB::table('blacklist')
             ->where('visitor_id', $id)
             ->update(['is_deleted' => 1, 'updated_at' => now()]);
+
+        // Register the Action in the Auditlog
+        $actionTypeId = 4;
+        $auditLogController = new AuditLogController();
+        $auditLogController->logAudit(Auth::id(), $actionTypeId, $id, null, null, 'Undo Blacklist');
         return redirect()->route('admins.users.blacklist')->with('success', 'Visitor has been removed from the blacklist');
     }
     // show blacklisted persons

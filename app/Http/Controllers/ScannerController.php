@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Visit;
 use App\Models\VisitorQrCode;
 use App\Models\Inmate;
+use Illuminate\Support\Facades\Auth;
 
 class ScannerController extends Controller
 {
@@ -52,6 +53,12 @@ class ScannerController extends Controller
         $newVisit->check_in_time = now();
         $newVisit->status_id = 4;
         $newVisit->save();
+
+        $visitId = $newVisit->id; // Store the newly created visit_id in a variable
+        // REGISTER ACTION IN AUDIT LOGS
+        $actionTypeId = 10;
+        $auditLogController = new AuditLogController();
+        $auditLogController->logAudit(null, $actionTypeId, Auth::id(), $inmate, $visitId, 'visit rejected');
         return redirect()->route('landingpage')->with('success', 'Check-in successful! Proceed to the Officer for verification.');
     }
 
@@ -77,6 +84,11 @@ class ScannerController extends Controller
         $checkInTime = \Carbon\Carbon::parse($record->check_in_time);
         $record->visit_duration = $checkInTime->diffInMinutes(now());
         $record->save();
+
+        // REGISTER ACTION IN AUDIT LOGS
+        $actionTypeId = 9;
+        $auditLogController = new AuditLogController();
+        $auditLogController->logAudit(null, $actionTypeId, Auth::id(), $record->inmate_id, $record->id, 'visitor checkout');
         return redirect()->route('landingpage')->with('success', 'Check-out successful!');
     }
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class VisitController extends Controller
 {
@@ -90,6 +91,10 @@ class VisitController extends Controller
         DB::table('visits')
             ->where('id', $id)
             ->update(['status_id' => 1, 'check_in_time' => now()]);
+        // Register the Action in the Auditlog
+        $actionTypeId = 8;
+        $auditLogController = new AuditLogController();
+        $auditLogController->logAudit(Auth::id(), $actionTypeId, $id, null, null, 'visit confirmed');
         return redirect()->back()->with('success', 'Visit confirmed successfully');
     }
     public function reject_visit($id)
@@ -97,10 +102,14 @@ class VisitController extends Controller
         DB::table('visits')
             ->where('id', $id)
             ->update([
-                'status_id' => 5, 
-                'check_out_time' => now(), 
+                'status_id' => 5,
+                'check_out_time' => now(),
                 'visit_duration' => DB::raw('TIMESTAMPDIFF(MINUTE, check_in_time, now())')
             ]);
+
+        $actionTypeId = 10;
+        $auditLogController = new AuditLogController();
+        $auditLogController->logAudit(Auth::id(), $actionTypeId, $id, null, null, 'visit rejected');
         return redirect()->back()->with('success', 'Visit rejected successfully');
     }
     public function force_end_visit($id)
@@ -108,10 +117,13 @@ class VisitController extends Controller
         DB::table('visits')
             ->where('id', $id)
             ->update([
-                'status_id' => 2, 
-                'check_out_time' => now(), 
+                'status_id' => 2,
+                'check_out_time' => now(),
                 'duration' => DB::raw('TIMESTAMPDIFF(MINUTE, check_in_time, now())')
             ]);
+        $actionTypeId = 9;
+        $auditLogController = new AuditLogController();
+        $auditLogController->logAudit(Auth::id(), $actionTypeId, $id, null, null, 'visit Force Ended');
         return redirect()->back()->with('info', 'Visit Force ended successfully');
     }
 
