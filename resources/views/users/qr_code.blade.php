@@ -1,6 +1,6 @@
 <x-layout>
     @php
-    $qrCodeFileName = $visitor->qr_path;
+    $qrCodeFileName = $visitor ? $visitor->qr_path : 'default_qr_code.png';
     error_log($qrCodeFileName);
     @endphp
     <div class="flex flex-col justify-center items-center h-screen">

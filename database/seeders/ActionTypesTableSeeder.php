@@ -27,6 +27,7 @@ class ActionTypesTableSeeder extends Seeder
             ['action_type_name' => 'user_added'],
             ['action_type_name' => 'user_updated'],
             ['action_type_name' => 'user_deleted'],
+            ['action_type_name' => 'visitor_rejected'],
         ]);
     }
 }
