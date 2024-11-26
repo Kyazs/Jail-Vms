@@ -19,12 +19,14 @@
                         class="text-white absolute end-2.5 top-1/2 transform -translate-y-1/2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
                 </div>
             </form>
-            <div class="mt-4">
-                <a href="#" onclick="toggleModal('addModeratorModal')"
-                    class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:bg-green-700 active:bg-green-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                    Add Moderator
-                </a>
-            </div>
+            @if (auth()->user()->role_id == 1)
+                <div class="mt-4">
+                    <a href="#" onclick="toggleModal('addModeratorModal')"
+                        class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:bg-green-700 active:bg-green-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                        Add Moderator
+                    </a>
+                </div>
+            @endif
             @include('/components/modals/add-moderator-modal')
         </div>
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-6">

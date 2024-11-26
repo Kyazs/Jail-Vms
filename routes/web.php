@@ -21,7 +21,6 @@ Route::get('/contactus', function () {
     return view('info.contactus');
 })->name('contactus');
 
-Route::get('/home', [AuthController::class, 'Authenticate'])->name('home');
 Route::get('/', [AuthController::class, 'Authenticate'])->name('home');
 // Route::get('/', function () {
 //     return view('welcome');
@@ -32,7 +31,7 @@ Route::post('/register', [RegisterController::class, 'register'])->name('registe
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-Route::get('/logout', [LoginController::class, 'logout'])->name('logouts');
+Route::get('/logouts', [LoginController::class, 'logout'])->name('logouts');
 
 Route::group(['middleware' => 'auth:visitor'], function () {
     Route::get('/dashboard', [VisitorController::class, 'ShowDashboard'])->name('dashboard');

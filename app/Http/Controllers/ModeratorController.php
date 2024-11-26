@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class ModeratorController extends Controller
 {
@@ -28,6 +29,11 @@ class ModeratorController extends Controller
             'role_id' => $request->input('role_id'),
             'password' => Hash::make($request->input('password')),
         ]);
+
+        // REGISTER ACTION IN AUDIT LOGS
+        $actionTypeId = 11;
+        $auditLogController = new AuditLogController();
+        $auditLogController->logAudit(Auth::id(), $actionTypeId, null, null, null, 'Moderator Added');
         return redirect()->route('admins.users.moderator')->with('success', 'Moderator added successfully');        
     }
 
