@@ -22,11 +22,11 @@
         <div class="chart-container grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div class="chart-box bg-white dark:bg-gray-800 shadow-xl rounded-lg p-6">
                 <h3 class="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Visitor Status</h3>
-                <canvas id="visitorStatusChart"></canvas>
+                <canvas id="visitorStatusChart" style="max-height: 300px;"></canvas>
             </div>
             <div class="chart-box bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
                 <h3 class="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Today's Visitors</h3>
-                <canvas id="todaysVisitorsChart"></canvas>
+                <canvas id="todaysVisitorsChart" style="max-height: 300px;"></canvas>
             </div>
         </div>
         <h3 class="text-xl font-semibold mb-4 text-gray-600 dark:text-gray-200">Visit Logs</h3>

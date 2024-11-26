@@ -18,12 +18,14 @@ class analyticController extends Controller
             ->join('inmates', 'visits.inmate_id', '=', 'inmates.id')
             ->join('visitors', 'visits.visitor_id', '=', 'visitors.id')
             ->select(
-                DB::raw("CONCAT(visitors.first_name, ' ', visitors.last_name) as visitor_name"),
-                DB::raw("CONCAT(inmates.first_name, ' ', inmates.last_name) as inmate_name"),
-                'visits.check_in_time',
-                'visits.check_out_time',
-                'visits.id as visit_id'
+            DB::raw("CONCAT(visitors.first_name, ' ', visitors.last_name) as visitor_name"),
+            DB::raw("CONCAT(inmates.first_name, ' ', inmates.last_name) as inmate_name"),
+            'visits.check_in_time',
+            'visits.check_out_time',
+            'visits.id as visit_id'
             )
+            ->orderBy('visits.check_in_time', 'desc')
+            ->orderBy('visits.check_out_time', 'desc')
             ->paginate(10);
 
         $totalCount = DB::table('visits')
