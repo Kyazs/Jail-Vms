@@ -13,13 +13,19 @@ use App\Http\Controllers\ModeratorController;
 use App\Http\Controllers\ScannerController;
 use App\Http\Controllers\VisitController;
 
-Route::view('/aboutus', 'info.aboutus');
-Route::view('/contactus', 'info.contactus');
+Route::get('/aboutus', function () {
+    return view('info.aboutus');
+})->name('aboutus');
+
+Route::get('/contactus', function () {
+    return view('info.contactus');
+})->name('contactus');
 
 Route::get('/home', [AuthController::class, 'Authenticate'])->name('home');
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [AuthController::class, 'Authenticate'])->name('home');
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register'])->name('register.submit');
