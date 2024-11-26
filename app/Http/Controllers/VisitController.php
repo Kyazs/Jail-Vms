@@ -93,8 +93,9 @@ class VisitController extends Controller
             ->update(['status_id' => 1, 'check_in_time' => now()]);
         // Register the Action in the Auditlog
         $actionTypeId = 8;
+        $visit = DB::table('visits')->where('id', $id)->first();
         $auditLogController = new AuditLogController();
-        $auditLogController->logAudit(Auth::id(), $actionTypeId, $id, null, null, 'visit confirmed');
+        $auditLogController->logAudit(Auth::id(), $actionTypeId, $visit->visitor_id, $visit->inmate_id, $visit->id, 'visit confirmed');
         return redirect()->back()->with('success', 'Visit confirmed successfully');
     }
     public function reject_visit($id)
@@ -108,8 +109,9 @@ class VisitController extends Controller
             ]);
 
         $actionTypeId = 10;
+        $visit = DB::table('visits')->where('id', $id)->first();
         $auditLogController = new AuditLogController();
-        $auditLogController->logAudit(Auth::id(), $actionTypeId, $id, null, null, 'visit rejected');
+        $auditLogController->logAudit(Auth::id(), $actionTypeId, $visit->visitor_id, $visit->inmate_id, $id, 'visit rejected');
         return redirect()->back()->with('success', 'Visit rejected successfully');
     }
     public function force_end_visit($id)
@@ -119,11 +121,12 @@ class VisitController extends Controller
             ->update([
                 'status_id' => 2,
                 'check_out_time' => now(),
-                'duration' => DB::raw('TIMESTAMPDIFF(MINUTE, check_in_time, now())')
+                'visit_duration' => DB::raw('TIMESTAMPDIFF(MINUTE, check_in_time, now())')
             ]);
         $actionTypeId = 9;
+        $visit = DB::table('visits')->where('id', $id)->first();
         $auditLogController = new AuditLogController();
-        $auditLogController->logAudit(Auth::id(), $actionTypeId, $id, null, null, 'visit Force Ended');
+        $auditLogController->logAudit(Auth::id(), $actionTypeId, $visit->visitor_id, $visit->inmate_id, $visit->id, 'visit Force Ended');
         return redirect()->back()->with('info', 'Visit Force ended successfully');
     }
 

@@ -52,7 +52,7 @@
                                     class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-32 dark:bg-gray-700 absolute mt-2 right-0">
                                     <ul class="py-2" aria-labelledby="dropdownDefaultButton">
                                         <li>
-                                            <a href="{{ route('users.profile.show', ['id' => $rec->visit_id]) }}"
+                                            <a href="{{ route('users.profile.show', ['id' => $rec->visitor_id]) }}"
                                                 class="block px-3 py-1 text-blue-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-blue-500">View
                                                 Details</a>
                                         </li>
