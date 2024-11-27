@@ -96,4 +96,7 @@ Route::group(['middleware' => 'auth'], function () {
     // Route::view('/admin/audit', 'admins.audit');
     Route::get('/admin/audit', [AuditLogController::class, 'showAudit'])->name('audit.log');
     Route::get('/admin/audit/search', [AuditLogController::class, 'searchAudit'])->name('audit.search');
+
+    Route::get('/admin/analytics/daily/', [analyticController::class, 'daily'])->name('analytics.daily');
+    Route::get('/admin/analytics/weekly/', [analyticController::class, 'weekly'])->name('analytics.weekly');
 });
