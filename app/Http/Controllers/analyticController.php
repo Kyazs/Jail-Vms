@@ -84,4 +84,26 @@ class analyticController extends Controller
         // Otherwise, return the view
         return view('admins.analytic.weekly', compact('labels', 'visitors'));
     }
+
+    public function monthly()
+    {
+        // Fetch monthly visitors grouped by month and year
+        $results = DB::table('visits')
+            ->select(
+                DB::raw('MONTHNAME(check_in_time) as month'), // Month name (e.g., January)
+                DB::raw('YEAR(check_in_time) as year'), // Year (e.g., 2024)
+                DB::raw('COUNT(*) as visitor_count') // Count of visitors
+            )
+            ->whereYear('check_in_time', now()->year) // Only for the current year
+            ->groupBy('month', 'year')
+            ->orderByRaw('MONTH(check_in_time)') // Ensure months are in chronological order
+            ->get();
+
+        // Extract labels and visitors
+        $labels = $results->map(fn($result) => $result->month . " " . $result->year); // Combined "January 2024"
+        $visitors = $results->pluck('visitor_count'); // Number of visitors per month
+
+        // Return the view with labels and visitors
+        return view('admins.analytic.monthly', compact('labels', 'visitors'));
+    }
 }

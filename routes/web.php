@@ -99,4 +99,5 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/admin/analytics/daily/', [analyticController::class, 'daily'])->name('analytics.daily');
     Route::get('/admin/analytics/weekly/', [analyticController::class, 'weekly'])->name('analytics.weekly');
+    Route::get('/admin/analytics/monthly/', [analyticController::class, 'monthly'])->name('analytics.monthly');
 });
