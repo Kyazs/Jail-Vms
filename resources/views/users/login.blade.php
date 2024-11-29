@@ -36,7 +36,7 @@
                         <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
                     <div class="text-sm">
-                        <a href="#"
+                        <a href="{{ route('forgot-password') }}"
                             class="font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300">Forgot
                             password?</a>
                     </div>

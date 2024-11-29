@@ -10,8 +10,10 @@ use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\InmateController;
 use App\Http\Controllers\ModeratorController;
+use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\ScannerController;
 use App\Http\Controllers\VisitController;
+use Illuminate\Support\Facades\Mail;
 
 Route::get('/aboutus', function () {
     return view('info.aboutus');
@@ -33,6 +35,21 @@ Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/logouts', [LoginController::class, 'logout'])->name('logouts');
 
+// Forgot Password
+Route::get('/forgot-password', [PasswordController::class, 'showForgotPasswordForm'])->name('forgot-password');
+Route::post('/forgot-password', [PasswordController::class, 'sendResetLink'])->name('password.email');
+
+Route::get('/reset-password/{token}', [PasswordController::class, 'showResetForm'])->name('password.reset');
+Route::post('/reset-password', [PasswordController::class, 'resetPassword'])->name('password.update');
+
+
+Route::get('/test-email', function () {
+    Mail::raw('This is a test email', function ($message) {
+        $message->to('your_email@mailtrap.io')
+                ->subject('Test Email');
+    });
+    return 'Email sent!';
+});
 Route::group(['middleware' => 'auth:visitor'], function () {
     Route::get('/dashboard', [VisitorController::class, 'ShowDashboard'])->name('dashboard');
     Route::get('/UserProfile', [VisitorController::class, 'ShowProfile'])->name('profile');
