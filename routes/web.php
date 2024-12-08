@@ -14,6 +14,7 @@ use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\ScannerController;
 use App\Http\Controllers\VisitController;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 Route::get('/aboutus', function () {
     return view('info.aboutus');
@@ -28,33 +29,50 @@ Route::get('/', [AuthController::class, 'Authenticate'])->name('home');
 //     return view('welcome');
 // });
 
+Route::view('/mail', 'email.reset');
+
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register'])->name('register.submit');
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::get('/logout', [LoginController::class, 'logout']);
 Route::get('/logouts', [LoginController::class, 'logout'])->name('logouts');
 
 // Forgot Password
-Route::get('/forgot-password', [PasswordController::class, 'showForgotPasswordForm'])->name('forgot-password');
-Route::post('/forgot-password', [PasswordController::class, 'sendResetLink'])->name('password.email');
-
-Route::get('/reset-password/{token}', [PasswordController::class, 'showResetForm'])->name('password.reset');
-Route::post('/reset-password', [PasswordController::class, 'resetPassword'])->name('password.update');
+Route::group(['midlewaware' => 'guest'], function () {
+    Route::get('/forgot-password', [PasswordController::class, 'showForgotPasswordForm'])->name('forgot-password');
+    Route::post('/forgot-password', [PasswordController::class, 'sendResetLink'])->name('password.email');
+    Route::get('/reset-password/{token}', [PasswordController::class, 'showResetForm'])->name('password.reset');
+    Route::post('/reset-password', [PasswordController::class, 'resetPassword'])->name('password.update');
+});
+// Route::get('/forgot-password', [PasswordController::class, 'showForgotPasswordForm'])->name('forgot-password');
+// Route::post('/forgot-password', [PasswordController::class, 'sendResetLink'])->name('password.email');
+// Route::get('/reset-password/{token}', [PasswordController::class, 'showResetForm'])->name('password.reset');
+// Route::post('/reset-password', [PasswordController::class, 'resetPassword'])->name('password.update');
 
 
 Route::get('/test-email', function () {
     Mail::raw('This is a test email', function ($message) {
         $message->to('your_email@mailtrap.io')
-                ->subject('Test Email');
+            ->subject('Test Email');
     });
     return 'Email sent!';
 });
+
+Route::get('/dashboard', [VisitorController::class, 'ShowDashboard'])->middleware(['auth:visitor','verified'])->name('dashboard');
+
 Route::group(['middleware' => 'auth:visitor'], function () {
-    Route::get('/dashboard', [VisitorController::class, 'ShowDashboard'])->name('dashboard');
     Route::get('/UserProfile', [VisitorController::class, 'ShowProfile'])->name('profile');
     Route::get('/visitor/qr-code', [VisitorController::class, 'showQr'])->name('show_qr');
     Route::get('qr-codes/{filename}', [VisitorController::class, 'getQrCode'])->name('qr_codes');
+
+    // email verification notice
+    Route::get('/email/verify', [RegisterController::class, 'verifyNotice'])->name('verification.notice');
+    // email verification handler ROUTE
+    Route::get('/email/verify/{id}/{hash}', [RegisterController::class, 'verifyEmail'])->middleware(['signed'])->name('verification.verify');
+    // Resend email verification
+    Route::post('/email/verification-notification', [Registercontroller::class, 'resendVerification'])->middleware('throttle:6,1')->name('verification.send');
 });
 // 
 // @ admin routes MIDDLEWARE

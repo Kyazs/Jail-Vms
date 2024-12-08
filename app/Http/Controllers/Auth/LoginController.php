@@ -40,9 +40,9 @@ class LoginController extends Controller
             if ($visitor->is_deleted == 1) {
                 return back()->withErrors(['username' => 'Your account has been deleted.']);
             }
-            if ($visitor->is_verified == 0) {
-                return back()->withErrors(['username' => 'Your account is pending verification.']);
-            }
+            // if ($visitor->is_verified == 0) {
+            //     return back()->withErrors(['username' => 'Your account is pending verification.']);
+            // }
             // Check if the visitor is blacklisted
             $blacklist = Blacklist::where('visitor_id', $visitor->visitor_id)->first();
             if ($blacklist) {

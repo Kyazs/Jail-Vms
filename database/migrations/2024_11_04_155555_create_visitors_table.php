@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('address_zip', 20);
             $table->unsignedBigInteger('id_type'); // Foreign key
             $table->text('id_document_path');
+            $table->timestamp('email_verified_at')->nullable();
             $table->boolean('is_verified')->default(false);
             $table->timestamps(); // Adds created_at and updated_at columns
             $table->softDeletes(); // Adds deleted_at column for soft deletes

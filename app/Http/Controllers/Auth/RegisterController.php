@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Visitor;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -45,7 +47,7 @@ class RegisterController extends Controller
         }
         // 2. Handle File Upload (id_document is required)
         $filePath = $request->file('id_document')->store('id_documents', 'public');
-        
+
         // 3. Create the Visitor record
         $visitor = Visitor::create([
             'first_name' => $request->input('first_name'),
@@ -69,8 +71,39 @@ class RegisterController extends Controller
             'username' => $request->input('username'),
             'password' => Hash::make($request->input('password')),
         ]);
+
+        // Log the visitor in
+        Auth::guard('visitor')->login($visitor);
+
+        // Trigger the Registered event to send the verification email
+        event(new Registered($visitor));
         // 5. (Optional) Send a verification email
-        return redirect()->route('login')->with('success', 'Registration successful. Your account is pending approval.');
+        return redirect()->route('verification.notice')->with('success', 'Registration successful. confirm your email address!');
     }
 
+    // email verification notice
+    public function verifyNotice()
+    {
+        if( $user = Auth::guard('visitor')){
+            return redirect()->route('dashboard');
+        }
+        if (is_null($user->email_verified_at)) {
+            return redirect()->route('verification.notice'); // Redirect to email notification if email is not verified
+        }
+        return view('auth.verify-email');
+    }
+
+    // email verification handler ROUTE
+    public function verifyEmail(EmailVerificationRequest $request)
+    {
+        $request->fulfill();
+        return redirect()->route('dashboard');
+    }
+
+    // Resend email verification
+    public function resendVerification(Request $request)
+    {
+        $request->user()->sendEmailVerificationNotification();
+        return back()->with('info', 'Verification link sent!');
+    }
 }

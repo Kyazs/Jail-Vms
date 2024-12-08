@@ -19,6 +19,10 @@ class VisitorController extends Controller
             return redirect()->route('login'); // Redirect to login if not authenticated
         }
 
+        if (is_null($visitor->email_verified_at)) {
+            return redirect()->route('verification.notice'); // Redirect to email notification if email is not verified
+        }
+
         $visitorId = $visitor->id;
         // Log the visitor ID to the server's error log
         error_log('Visitor ID: ' . $visitorId);
