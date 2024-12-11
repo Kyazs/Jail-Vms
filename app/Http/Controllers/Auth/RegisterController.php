@@ -82,8 +82,11 @@ class RegisterController extends Controller
     }
 
     // email verification notice
-    public function verifyNotice()
+    public function verifyNotice(Request $request)
     {
+        if ($request->user('visitor')->hasVerifiedEmail()) {
+            return redirect()->route('dashboard');
+        }
         return view('auth.verify-email');
     }
 
