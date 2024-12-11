@@ -24,6 +24,10 @@ Route::get('/contactus', function () {
     return view('info.contactus');
 })->name('contactus');
 
+Route::get('/privacy', function () {
+    return view('info.privacy');
+})->name('privacy');
+
 Route::get('/', [AuthController::class, 'Authenticate'])->name('home');
 // Route::get('/', function () {
 //     return view('welcome');
