@@ -76,8 +76,11 @@ class RegisterController extends Controller
         Auth::guard('visitor')->login($visitor);
 
         // Trigger the Registered event to send the verification email
+        // Trigger the Registered event
         event(new Registered($visitor));
-        // 5. (Optional) Send a verification email
+        
+        // Send a verification email
+        $visitor->sendEmailVerificationNotification();
         return redirect()->route('verification.notice')->with('success', 'Registration successful. confirm your email address!');
     }
 
@@ -100,7 +103,11 @@ class RegisterController extends Controller
     // Resend email verification
     public function resendVerification(Request $request)
     {
-        $request->user()->sendEmailVerificationNotification();
+        if ($request->user('visitor')->hasVerifiedEmail()) {
+            return redirect()->route('dashboard')->with('info', 'Your email is already verified.');
+        }
+
+        $request->user('visitor')->sendEmailVerificationNotification();
         return back()->with('info', 'Verification link sent!');
     }
 }

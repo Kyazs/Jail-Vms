@@ -34,15 +34,13 @@
                                 {{ $record->address }}</p>
                             <p class="text-sm text-gray-500 dark:text-gray-300"><strong>ID Type:</strong>
                                 {{ $record->id_name }}</p>
-                            <p class="text-sm text-gray-500 dark:text-gray-300"><strong>ID Document:</strong>
-                                {{ $record->id_name }}</p>
-                            <p class="text-sm text-gray-500 dark:text-gray-300"><strong>Contact Number:</strong>
-                                {{ $record->contact_number }}</p>
                             <p class="text-sm text-gray-500 dark:text-gray-300"><strong>ID Document:</strong></p>
                             <div class="flex justify-center mt-2">
                                 <img src="{{ Storage::url($record->id_document_path) }}" alt="ID Document"
                                     class="rounded-md shadow-sm max-w-full h-auto">
                             </div>
+                            <p class="text-sm text-gray-500 dark:text-gray-300"><strong>Contact Number:</strong>
+                                {{ $record->contact_number }}</p>
                             <p class="text-sm text-gray-500 dark:text-gray-300"><strong>Email:</strong>
                                 {{ $record->email }}</p>
                             <p class="text-sm text-gray-500 dark:text-gray-300"><strong>Username:</strong>
@@ -68,4 +66,3 @@
         </div>
     </div>
 </div>
-

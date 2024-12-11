@@ -149,7 +149,7 @@ class AdminController extends Controller
         // Register the Action in the Auditlog
         $actionTypeId = 14;
         $auditLogController = new AuditLogController();
-        $auditLogController->logAudit(Auth::id(), $actionTypeId, $id, null, null, 'Confirmed visitor');
+        $auditLogController->logAudit(Auth::id(), $actionTypeId, $id, null, null, 'Rejected visitor AND removed from the system');
 
         DB::table('visitors')
             ->where('id', $id)
