@@ -65,8 +65,8 @@
                                         </li>
                                         <li>
                                             <a href="#"
-                                                class="block px-3 py-1 text-red-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-red-500">Reset
-                                                Password</a>
+                                                onclick="toggleModal('viewPendingUserModal{{ $rec->visitor_id }}')"
+                                                class="block px-3 py-1 text-blue-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-yellow-500">Edit</a>
                                         </li>
                                         <li>
                                             <a href="#" onclick="toggleModal('addBlacklistModal')"
@@ -77,6 +77,7 @@
                                 </div>
                             </td>
                         </tr>
+                        @include('components.modals.update-register-visitor', ['record' => $rec])
                         @include('components.modals.add-blacklist', ['record' => $rec])
                     @endforeach
                 </tbody>

@@ -40,7 +40,7 @@ Route::get('/logout', [LoginController::class, 'logout']);
 Route::get('/logouts', [LoginController::class, 'logout'])->name('logouts');
 
 // Forgot Password
-Route::group(['midlewaware' => 'guest'], function () {
+Route::group(['middleware' => 'guest'], function () {
     Route::get('/forgot-password', [PasswordController::class, 'showForgotPasswordForm'])->name('forgot-password');
     Route::post('/forgot-password', [PasswordController::class, 'sendResetLink'])->name('password.email');
     Route::get('/reset-password/{token}', [PasswordController::class, 'showResetForm'])->name('password.reset');
@@ -98,6 +98,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::put('/admin/user/moderator/update/{id}', [ModeratorController::class, 'update'])->name('admins.users.moderator.update');
 
     Route::get('/admin/user/registered', [AdminController::class, 'user_reg'])->name('admins.users.registered');
+    Route::put('/admin/user/registered/edit/{id}', [AdminController::class, 'update_registered'])->name('admins.users.registered.update');
     Route::get('/admin/user/profile/{id}', [AdminController::class, 'get_profile'])->name('users.profile.show');
 
     Route::get('/admin/user/pending', [AdminController::class, 'user_pend'])->name('admins.users.pending');
