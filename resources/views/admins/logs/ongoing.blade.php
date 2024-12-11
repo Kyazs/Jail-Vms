@@ -59,7 +59,8 @@
                                         <li>
                                             <a href="{{ route('visit.force_end', ['id' => $rec->visit_id]) }}"
                                                 onclick="return confirm('Are you sure you want to FORCE END this person visit?');"
-                                                class="block px-3 py-1 text-red-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-red-500">Force End</a>
+                                                class="block px-3 py-1 text-red-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-red-500">Force
+                                                End</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -71,22 +72,9 @@
         </div>
         <div class="mt-4">
             <div class="flex flex-col items-center">
-                <!-- Help text -->
-                <span class="text-sm text-gray-700 dark:text-gray-400">
-                    Showing <span class="font-semibold text-gray-900 dark:text-white">1</span> to <span
-                        class="font-semibold text-gray-900 dark:text-white">10</span> of <span
-                        class="font-semibold text-gray-900 dark:text-white">100</span> Entries
-                </span>
-                <!-- Buttons -->
+                <!-- Pagination Links -->
                 <div class="inline-flex mt-2 xs:mt-0">
-                    <button
-                        class="flex items-center justify-center px-3 h-8 text-sm font-medium text-white bg-gray-800 rounded-s hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                        Prev
-                    </button>
-                    <button
-                        class="flex items-center justify-center px-3 h-8 text-sm font-medium text-white bg-gray-800 border-0 border-s border-gray-700 rounded-e hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                        Next
-                    </button>
+                    {{ $records->links() }}
                 </div>
             </div>
         </div>

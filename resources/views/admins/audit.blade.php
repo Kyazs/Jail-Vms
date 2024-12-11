@@ -97,15 +97,9 @@
         </div>
         <div class="mt-4">
             <div class="flex flex-col items-center">
-                <!-- Help text -->
-                <span class="text-sm text-gray-700 dark:text-gray-400">
-                    Showing <span class="font-semibold text-gray-900 dark:text-white">{{ $logs->firstItem() }}</span>
-                    to <span class="font-semibold text-gray-900 dark:text-white">{{ $logs->lastItem() }}</span> of
-                    <span class="font-semibold text-gray-900 dark:text-white">{{ $logs->total() }}</span> Entries
-                </span>
                 <!-- Pagination Links -->
                 <div class="inline-flex mt-2 xs:mt-0">
-                    {{ $logs->links() }}
+                    {{ $logs->links('pagination::tailwind') }}
                 </div>
             </div>
         </div>
