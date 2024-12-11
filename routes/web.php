@@ -120,6 +120,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/admin/visit/ongoing', [VisitController::class, 'ongoing_visit'])->name('logs.ongoing');
     Route::get('/admin/visit/completed', [VisitController::class, 'completed_visit'])->name('logs.completed');
     Route::post('/admin/visit/search', [VisitController::class, 'search_visit'])->name('logs.search');
+    Route::get('/admin/visit/sort', [VisitController::class, 'sort_visits'])->name('logs.sort');
+
     Route::get('/admin/visit/confirm/{id}', [VisitController::class, 'confirm_visit'])->name('visit.confirm');
     Route::get('/admin/visit/reject/{id}', [VisitController::class, 'reject_visit'])->name('visit.reject');
     Route::get('/admin/visit/force-end/{id}', [VisitController::class, 'force_end_visit'])->name('visit.force_end');
@@ -134,6 +136,8 @@ Route::group(['middleware' => 'auth'], function () {
     // Route::view('/admin/audit', 'admins.audit');
     Route::get('/admin/audit', [AuditLogController::class, 'showAudit'])->name('audit.log');
     Route::get('/admin/audit/search', [AuditLogController::class, 'searchAudit'])->name('audit.search');
+    Route::get('/admin/audit/sort', [AuditLogController::class, 'sortAudit'])->name('audit.sort');
+    Route::get('/admin/audit/filter', [AuditLogController::class, 'filterByActionType'])->name('audit.filter.action_type');
 
     Route::get('/admin/analytics/daily/', [analyticController::class, 'daily'])->name('analytics.daily');
     Route::get('/admin/analytics/weekly/', [analyticController::class, 'weekly'])->name('analytics.weekly');

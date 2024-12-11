@@ -21,42 +21,51 @@
             </form>
             <div class="flex flex-row gap-5">
                 <div class="max-w-xs">
-                    <label for="sort-by" class="mb-2 text-sm font-medium text-gray-900 dark:text-white">Sort by</label>
-                    <select id="sort-by" name="sort-by"
-                        class="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 
-                    focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 
-                    dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        <option value="" hidden selected>Sort by</option>
-                        <option value="visitor_name">Newest</option>
-                        <option value="inmate_name">Oldest</option>
-                    </select>
+                    <form id="sort-form" action="{{ route('audit.sort') }}">
+                        @csrf
+                        <label for="sort-by" class="mb-2 text-sm font-medium text-gray-900 dark:text-white">Sort
+                            by</label>
+                        <select id="sort-by" name="sort-by" onchange="document.getElementById('sort-form').submit();"
+                            class="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 
+                            focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 
+                            dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option value="" hidden>Sort by</option>
+                            <option value="desc">Newest</option>
+                            <option value="asc">Oldest</option>
+                        </select>
+                    </form>
                 </div>
                 <div class="max-w-xs">
-                    <label for="action-type" class="mb-2 text-sm font-medium text-gray-900 dark:text-white">Action
-                        Type</label>
-                    <select id="action-type" name="action-type"
-                        class="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 
+                    <form id="action-type-form" action="{{ route('audit.filter.action_type') }}" method="GET">
+                        @csrf
+                        <label for="action-type" class="mb-2 text-sm font-medium text-gray-900 dark:text-white">Action
+                            Type</label>
+                        <select id="action-type" name="action-type"
+                            onchange="document.getElementById('action-type-form').submit();"
+                            class="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 
                     focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 
                     dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        <option value="" selected>Default</option>
-                        @foreach ([
-        'visitor_registered' => 'Visitor Registered',
-        'visitor_updated' => 'Visitor Updated',
-        'visitor_blacklisted' => 'Visitor Blacklisted',
-        'visitor_unblacklisted' => 'Visitor Unblacklisted',
-        'inmate_added' => 'Inmate Added',
-        'inmate_updated' => 'Inmate Updated',
-        'inmate_deleted' => 'Inmate Deleted',
-        'visit_started' => 'Visit Started',
-        'visit_completed' => 'Visit Completed',
-        'visit_cancelled' => 'Visit Cancelled',
-        'user_added' => 'User Added',
-        'user_updated' => 'User Updated',
-        'user_deleted' => 'User Deleted',
+                            <option value="" hidden selected>Default</option>
+                            @foreach ([
+        1 => 'Visitor Registered',
+        2 => 'Visitor Updated',
+        3 => 'Visitor Blacklisted',
+        4 => 'Visitor Unblacklisted',
+        5 => 'Inmate Added',
+        6 => 'Inmate Updated',
+        7 => 'Inmate Deleted',
+        8 => 'Visit Started',
+        9 => 'Visit Completed',
+        10 => 'Visit Cancelled',
+        11 => 'User Added',
+        12 => 'User Updated',
+        13 => 'User Deleted',
+        14 => 'Visitor Rejected',
     ] as $value => $label)
-                            <option value="{{ $value }}">{{ $label }}</option>
-                        @endforeach
-                    </select>
+                                <option value="{{ $value }}">{{ $label }}</option>
+                            @endforeach
+                        </select>
+                    </form>
                 </div>
             </div>
         </div>
