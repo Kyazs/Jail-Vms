@@ -34,6 +34,7 @@ class AdminController extends Controller
                 $join->on('visitors.id', '=', 'blacklist.visitor_id')
                     ->where('blacklist.is_deleted', '=', 0);
             })
+            // ->where('visitors.deleted_at', '=', null)
             ->select(
                 'visitors.id as visitor_id',
                 'visitors.*',
@@ -48,6 +49,18 @@ class AdminController extends Controller
             ->paginate(10);
 
         return view('admins.users.registered', ['records' => $records]);
+    }
+
+    public function undelete_visitor($id)
+    {
+        DB::table('visitors')
+            ->where('id', $id)
+            ->update(['deleted_at' => null]);
+        // Register the Action in the Auditlog
+        $actionTypeId = 12;
+        $auditLogController = new AuditLogController();
+        $auditLogController->logAudit(Auth::id(), $actionTypeId, $id, null, null, 'Undeleted visitor');
+        return redirect()->route('admins.users.registered')->with('success', 'Visitor has been undeleted successfully.');
     }
 
     public function update_registered(Request $request, $id)
@@ -156,6 +169,36 @@ class AdminController extends Controller
             ->delete();
 
         return redirect()->route('admins.users.pending')->with('success', 'Visitor has been rejected and removed from the system');
+    }
+
+    // soft delete the visitor
+    public function delete_visitor($id)
+    {
+        DB::table('visitors')
+            ->where('id', $id)
+            ->update(['deleted_at' => now()]);
+
+        // Register the Action in the Auditlog
+        $actionTypeId = 13;
+        $auditLogController = new AuditLogController();
+        $auditLogController->logAudit(Auth::id(), $actionTypeId, $id, null, null, 'Soft deleted visitor');
+
+        return redirect()->route('admins.users.registered')->with('success', 'Visitor has been soft deleted successfully.');
+    }
+
+    // undelete a user
+    public function undelete_user($id)
+    {
+        DB::table('users')
+            ->where('id', $id)
+            ->update(['deleted_at' => null]);
+
+        // Register the Action in the Auditlog
+        $actionTypeId = 12;
+        $auditLogController = new AuditLogController();
+        $auditLogController->logAudit(Auth::id(), $actionTypeId, $id, null, null, 'Undeleted user');
+
+        return redirect()->route('admins.users.registered')->with('info', 'User has been undeleted successfully.');
     }
 
     // show the visitor profile on admin side

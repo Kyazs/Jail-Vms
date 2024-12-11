@@ -60,7 +60,7 @@ Route::get('/test-email', function () {
     return 'Email sent!';
 });
 
-Route::get('/dashboard', [VisitorController::class, 'ShowDashboard'])->middleware(['auth:visitor','verified'])->name('dashboard');
+Route::get('/dashboard', [VisitorController::class, 'ShowDashboard'])->middleware(['auth:visitor', 'verified'])->name('dashboard');
 
 Route::group(['middleware' => 'auth:visitor'], function () {
     Route::get('/UserProfile', [VisitorController::class, 'ShowProfile'])->name('profile');
@@ -105,6 +105,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/admin/user/pending/{id}', [AdminController::class, 'show_pending'])->name('users.pending.show');
     Route::post('/admin/visitor/pending/{id}', [AdminController::class, 'confirm_visitor'])->name('visitor.confirm');
     Route::post('/admin/visitor/pending{id}', [AdminController::class, 'reject_visitor'])->name('visitor.reject');
+    // delete visitor
+    Route::post('/admin/visitor/delete/{id}', [AdminController::class, 'delete_visitor'])->name('visitor.delete');
+    Route::post('/admin/visitor/undelete/{id}', [AdminController::class, 'undelete_visitor'])->name('visitor.undelete');
 
     Route::get('/admin/user/blacklisted', [AdminController::class, 'user_black'])->name('admins.users.blacklist');
     // ADD TO BLACKLISTED
