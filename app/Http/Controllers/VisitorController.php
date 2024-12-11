@@ -62,10 +62,16 @@ class VisitorController extends Controller
         }
         $visitorId = $visitor->id;
         // Retrieve the visitor's qr
-        $visitor = DB::table('visitor_qr_code')
+        $visitorQr = DB::table('visitor_qr_code')
             ->where('visitor_id', $visitorId)
             ->first();
-        return view('users.qr_code', ['visitor' => $visitor]);
+
+        if (!$visitorQr) {
+            $message = 'Your account is under verification';
+            return view('users.qr_code', ['visitor' => null, 'message' => $message]);
+        }
+
+        return view('users.qr_code', ['visitor' => $visitorQr, 'message' => null]);
     }
 
     public function getQrCode($filename)

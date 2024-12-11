@@ -84,12 +84,6 @@ class RegisterController extends Controller
     // email verification notice
     public function verifyNotice()
     {
-        if( $user = Auth::guard('visitor')){
-            return redirect()->route('dashboard');
-        }
-        if (is_null($user->email_verified_at)) {
-            return redirect()->route('verification.notice'); // Redirect to email notification if email is not verified
-        }
         return view('auth.verify-email');
     }
 
