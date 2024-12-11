@@ -101,14 +101,16 @@ class AdminController extends Controller
     // reject the pending visitor
     public function reject_visitor($id)
     {
-        DB::table('visitors')
-            ->where('id', $id)
-            ->delete();
         // Register the Action in the Auditlog
         $actionTypeId = 14;
         $auditLogController = new AuditLogController();
         $auditLogController->logAudit(Auth::id(), $actionTypeId, $id, null, null, 'Confirmed visitor');
-        return redirect()->route('admins.users.pending')->with('success', 'Visitor has been rejected and removed  from the system');
+        
+        DB::table('visitors')
+            ->where('id', $id)
+            ->delete();
+            
+        return redirect()->route('admins.users.pending')->with('success', 'Visitor has been rejected and removed from the system');
     }
 
     // show the visitor profile on admin side

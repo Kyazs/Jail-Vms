@@ -1,5 +1,8 @@
 <x-admin-layout>
     <!-- Main Content -->
+    @php
+        $user = Auth::user();
+    @endphp
     <div class="main-content p-6">
         <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4">BLACKLISTED VISITOR</h1>
         <div class="mt-6">
@@ -62,13 +65,15 @@
                                             <a href="{{ route('users.profile.show', ['id' => $rec->visitor_id]) }}"
                                                 class="block px-3 py-1 text-blue-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-blue-500">View</a>
                                         </li>
-                                        <li>
-                                            <a href="{{ route('admins.users.remove_from_blacklist', ['id' => $rec->visitor_id]) }}"
-                                                onclick="return confirm('Are you sure you want to remove this user from blacklist');"
-                                                class="block px-3 py-1 text-purple-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-purple-500">Remove
-                                                From Blacklist
-                                            </a>
-                                        </li>
+                                        @if ($user && $user->role_id == 1)
+                                            <li>
+                                                <a href="{{ route('admins.users.remove_from_blacklist', ['id' => $rec->visitor_id]) }}"
+                                                    onclick="return confirm('Are you sure you want to remove this user from blacklist');"
+                                                    class="block px-3 py-1 text-purple-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-purple-500">Remove
+                                                    From Blacklist
+                                                </a>
+                                            </li>
+                                        @endif
                                     </ul>
                                 </div>
                             </td>
