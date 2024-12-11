@@ -94,6 +94,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/admin/user/moderator', [ModeratorController::class, 'show'])->name('admins.users.moderator');
     Route::post('/admin/user/moderator', [ModeratorController::class, 'store'])->name('admins.users.moderator.store');
     Route::get('/admin/moderator/search', [ModeratorController::class, 'mod_search'])->name('admins.users.moderator.search');
+    Route::get('/admin/user/moderator/edit/{id}', [ModeratorController::class, 'edit'])->name('admins.users.moderator.edit');
+    Route::put('/admin/user/moderator/update/{id}', [ModeratorController::class, 'update'])->name('admins.users.moderator.update');
 
     Route::get('/admin/user/registered', [AdminController::class, 'user_reg'])->name('admins.users.registered');
     Route::get('/admin/user/profile/{id}', [AdminController::class, 'get_profile'])->name('users.profile.show');

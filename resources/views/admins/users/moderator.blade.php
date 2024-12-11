@@ -1,5 +1,4 @@
 <x-admin-layout>
-    <!-- Main Content -->
     @if (auth()->user()->role_id == 1)
         <div class="main-content p-6">
             <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4">MODERATOR</h1>
@@ -62,14 +61,14 @@
                                         class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-32 dark:bg-gray-700 absolute mt-2 right-0">
                                         <ul class="py-2" aria-labelledby="dropdownDefaultButton">
                                             <li>
-                                                <a href="#"
+                                                <a href="{{ route('admins.users.moderator.edit', $rec->user_id) }}"
                                                     class="block px-3 py-1 text-blue-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-blue-500">Edit</a>
                                             </li>
-                                            <li>
+                                            {{-- <li>
                                                 <a href="#"
                                                     class="block px-3 py-1 text-red-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-red-500">Reset
                                                     Password</a>
-                                            </li>
+                                            </li> --}}
                                         </ul>
                                     </div>
                                 </td>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -32,9 +33,45 @@ class ModeratorController extends Controller
 
         // REGISTER ACTION IN AUDIT LOGS
         $actionTypeId = 11;
-        $auditLogController = new AuditLogController();
+        $auditLogController = app(AuditLogController::class);
         $auditLogController->logAudit(Auth::id(), $actionTypeId, null, null, null, 'Moderator Added');
         return redirect()->route('admins.users.moderator')->with('success', 'Moderator added successfully');        
+    }
+
+    public function edit($id)
+    {
+        $user = User::findOrFail($id);
+        $roles = Role::all();
+        // dd($roles);
+        return view('admins.users.edit-moderator', compact('user','roles'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'username' => ['required', 'string', 'max:255', 'unique:users,username,' . $id],
+            'role_id' => ['required', 'integer'],
+            'password' => ['nullable', 'string', 'min:8'],
+        ]);
+
+        $user = User::findOrFail($id);
+        $user->first_name = $request->input('first_name');
+        $user->last_name = $request->input('last_name');
+        $user->username = $request->input('username');
+        $user->role_id = $request->input('role_id');
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->input('password'));
+        }
+        $user->save();
+
+        // REGISTER ACTION IN AUDIT LOGS
+        $actionTypeId = 12; 
+        $auditLogController = new AuditLogController();
+        $auditLogController->logAudit(Auth::id(), $actionTypeId, null, null, null, 'Moderator Updated user =' . $id);
+
+        return redirect()->route('admins.users.moderator')->with('success', 'Moderator updated successfully');
     }
 
     public function show()
