@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Blacklist;
 use Illuminate\Http\Request;
 use App\Models\Visit;
 use App\Models\VisitorQrCode;
@@ -31,17 +32,19 @@ class ScannerController extends Controller
         if (!$visit) {
             return redirect()->back()->with('error', 'Invalid QR code.');
         }
+        // Check if the visitor is blacklisted
+        $blacklist = Blacklist::where('visitor_id', $visit->visitor_id)->first();
+        if ($blacklist) {
+            return redirect()->route('landingpage')->with('error', 'You have been blacklisted and cannot check in. Please contact the admin for more information.');
+        }
+
         $record = Visit::where('visitor_id', $visit->visitor_id)->where('check_out_time', null)->first();
         if ($record) {
-            // Check if the visitor is blacklisted
-            if ($record->blacklist) {
-                return redirect()->route('landingpage')->with('error', 'This visitor is blacklisted and cannot check in.');
-            }
             return redirect()->route('landingpage')->with('error', 'Visitor already checked-in. Checkout or Proceed to the Officer for Verfication.');
         }
         // Validate inmate ID
         $inmateId = $request->input('inmate_id');
-        $inmate = Inmate::find($inmateId);
+        $inmate = Inmate::where('id', $inmateId)->where('is_deleted', 0)->first();
         if (!$inmate) {
             return redirect()->route('checkin')->with('error', 'Invalid inmate ID.');
         }
@@ -99,10 +102,13 @@ class ScannerController extends Controller
             return response()->json([]);
         }
 
-        $inmates = Inmate::where('first_name', 'LIKE', "%{$query}%")
-            ->orWhere('last_name', 'LIKE', "%{$query}%")
-            ->orWhere('id', 'LIKE', "%{$query}%")
-            ->orWhere('inmate_number', 'LIKE', "%{$query}%")
+        $inmates = Inmate::where('is_deleted', 0)
+            ->where(function ($q) use ($query) {
+                $q->where('first_name', 'LIKE', "%{$query}%")
+                    ->orWhere('last_name', 'LIKE', "%{$query}%")
+                    ->orWhere('id', 'LIKE', "%{$query}%")
+                    ->orWhere('inmate_number', 'LIKE', "%{$query}%");
+            })
             ->select('id', 'first_name', 'last_name', 'inmate_number')
             ->limit(10)
             ->get();
