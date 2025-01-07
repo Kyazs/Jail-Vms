@@ -10,29 +10,73 @@ use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\InmateController;
 use App\Http\Controllers\ModeratorController;
+use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\ScannerController;
 use App\Http\Controllers\VisitController;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
-Route::view('/aboutus', 'info.aboutus');
-Route::view('/contactus', 'info.contactus');
+Route::get('/aboutus', function () {
+    return view('info.aboutus');
+})->name('aboutus');
 
-Route::get('/home', [AuthController::class, 'Authenticate'])->name('home');
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/contactus', function () {
+    return view('info.contactus');
+})->name('contactus');
+
+Route::get('/privacy', function () {
+    return view('info.privacy');
+})->name('privacy');
+
+Route::get('/', [AuthController::class, 'Authenticate'])->name('home');
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+Route::view('/mail', 'email.reset');
 
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register'])->name('register.submit');
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-Route::get('/logout', [LoginController::class, 'logout'])->name('logouts');
+Route::get('/logout', [LoginController::class, 'logout']);
+Route::get('/logouts', [LoginController::class, 'logout'])->name('logouts');
+
+// Forgot Password
+Route::group(['middleware' => 'guest'], function () {
+    Route::get('/forgot-password', [PasswordController::class, 'showForgotPasswordForm'])->name('forgot-password');
+    Route::post('/forgot-password', [PasswordController::class, 'sendResetLink'])->name('password.email');
+    Route::get('/reset-password/{token}', [PasswordController::class, 'showResetForm'])->name('password.reset');
+    Route::post('/reset-password', [PasswordController::class, 'resetPassword'])->name('password.update');
+});
+// Route::get('/forgot-password', [PasswordController::class, 'showForgotPasswordForm'])->name('forgot-password');
+// Route::post('/forgot-password', [PasswordController::class, 'sendResetLink'])->name('password.email');
+// Route::get('/reset-password/{token}', [PasswordController::class, 'showResetForm'])->name('password.reset');
+// Route::post('/reset-password', [PasswordController::class, 'resetPassword'])->name('password.update');
+
+
+Route::get('/test-email', function () {
+    Mail::raw('This is a test email', function ($message) {
+        $message->to('your_email@mailtrap.io')
+            ->subject('Test Email');
+    });
+    return 'Email sent!';
+});
+
+Route::get('/dashboard', [VisitorController::class, 'ShowDashboard'])->middleware(['auth:visitor', 'verified'])->name('dashboard');
 
 Route::group(['middleware' => 'auth:visitor'], function () {
-    Route::get('/dashboard', [VisitorController::class, 'ShowDashboard'])->name('dashboard');
     Route::get('/UserProfile', [VisitorController::class, 'ShowProfile'])->name('profile');
     Route::get('/visitor/qr-code', [VisitorController::class, 'showQr'])->name('show_qr');
     Route::get('qr-codes/{filename}', [VisitorController::class, 'getQrCode'])->name('qr_codes');
+
+    // email verification notice
+    Route::get('/email/verify', [RegisterController::class, 'verifyNotice'])->name('verification.notice');
+    // email verification handler ROUTE
+    Route::get('/email/verify/{id}/{hash}', [RegisterController::class, 'verifyEmail'])->middleware(['signed'])->name('verification.verify');
+    // Resend email verification
+    Route::post('/email/verification-notification', [Registercontroller::class, 'resendVerification'])->middleware('throttle:6,1')->name('verification.send');
 });
 // 
 // @ admin routes MIDDLEWARE
@@ -54,14 +98,20 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/admin/user/moderator', [ModeratorController::class, 'show'])->name('admins.users.moderator');
     Route::post('/admin/user/moderator', [ModeratorController::class, 'store'])->name('admins.users.moderator.store');
     Route::get('/admin/moderator/search', [ModeratorController::class, 'mod_search'])->name('admins.users.moderator.search');
+    Route::get('/admin/user/moderator/edit/{id}', [ModeratorController::class, 'edit'])->name('admins.users.moderator.edit');
+    Route::put('/admin/user/moderator/update/{id}', [ModeratorController::class, 'update'])->name('admins.users.moderator.update');
 
     Route::get('/admin/user/registered', [AdminController::class, 'user_reg'])->name('admins.users.registered');
+    Route::put('/admin/user/registered/edit/{id}', [AdminController::class, 'update_registered'])->name('admins.users.registered.update');
     Route::get('/admin/user/profile/{id}', [AdminController::class, 'get_profile'])->name('users.profile.show');
 
     Route::get('/admin/user/pending', [AdminController::class, 'user_pend'])->name('admins.users.pending');
     Route::get('/admin/user/pending/{id}', [AdminController::class, 'show_pending'])->name('users.pending.show');
     Route::post('/admin/visitor/pending/{id}', [AdminController::class, 'confirm_visitor'])->name('visitor.confirm');
     Route::post('/admin/visitor/pending{id}', [AdminController::class, 'reject_visitor'])->name('visitor.reject');
+    // delete visitor
+    Route::post('/admin/visitor/delete/{id}', [AdminController::class, 'delete_visitor'])->name('visitor.delete');
+    Route::post('/admin/visitor/undelete/{id}', [AdminController::class, 'undelete_visitor'])->name('visitor.undelete');
 
     Route::get('/admin/user/blacklisted', [AdminController::class, 'user_black'])->name('admins.users.blacklist');
     // ADD TO BLACKLISTED
@@ -77,6 +127,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/admin/visit/ongoing', [VisitController::class, 'ongoing_visit'])->name('logs.ongoing');
     Route::get('/admin/visit/completed', [VisitController::class, 'completed_visit'])->name('logs.completed');
     Route::post('/admin/visit/search', [VisitController::class, 'search_visit'])->name('logs.search');
+    Route::get('/admin/visit/sort', [VisitController::class, 'sort_visits'])->name('logs.sort');
+
     Route::get('/admin/visit/confirm/{id}', [VisitController::class, 'confirm_visit'])->name('visit.confirm');
     Route::get('/admin/visit/reject/{id}', [VisitController::class, 'reject_visit'])->name('visit.reject');
     Route::get('/admin/visit/force-end/{id}', [VisitController::class, 'force_end_visit'])->name('visit.force_end');
@@ -91,4 +143,10 @@ Route::group(['middleware' => 'auth'], function () {
     // Route::view('/admin/audit', 'admins.audit');
     Route::get('/admin/audit', [AuditLogController::class, 'showAudit'])->name('audit.log');
     Route::get('/admin/audit/search', [AuditLogController::class, 'searchAudit'])->name('audit.search');
+    Route::get('/admin/audit/sort', [AuditLogController::class, 'sortAudit'])->name('audit.sort');
+    Route::get('/admin/audit/filter', [AuditLogController::class, 'filterByActionType'])->name('audit.filter.action_type');
+
+    Route::get('/admin/analytics/daily/', [analyticController::class, 'daily'])->name('analytics.daily');
+    Route::get('/admin/analytics/weekly/', [analyticController::class, 'weekly'])->name('analytics.weekly');
+    Route::get('/admin/analytics/monthly/', [analyticController::class, 'monthly'])->name('analytics.monthly');
 });

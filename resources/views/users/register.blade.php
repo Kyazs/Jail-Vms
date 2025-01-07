@@ -41,20 +41,6 @@
                                 @enderror
                             </div>
                         </div>
-                        <!-- Middle Name -->
-                        <div>
-                            <label for="middle_name"
-                                class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100">Middle
-                                Name</label>
-                            <div class="mt-2">
-                                <input id="middle_name" name="middle_name" type="text"
-                                    value="{{ old('middle_name') }}"
-                                    class="block w-full rounded-md border-0 px-4 py-2 text-gray-900 dark:text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-400 sm:text-sm sm:leading-6">
-                                @error('middle_name')
-                                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
-                        </div>
                         <!-- Last Name -->
                         <div>
                             <label for="last_name"
@@ -228,23 +214,10 @@
                     <label for="address_barangay"
                         class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100">Barangay</label>
                     <div class="mt-2">
-                        <input id="address_barangay" name="address_barangay" type="text" required value="{{ old('address_barangay') }}"
+                        <input id="address_barangay" name="address_barangay" type="text" required
+                            value="{{ old('address_barangay') }}"
                             class="block w-full rounded-md border-0 px-4 py-2 text-gray-900 dark:text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-400 sm:text-sm sm:leading-6">
                         @error('address_barangay')
-                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-                <!-- Building Number/Village -->
-                <div>
-                    <label for="building_number"
-                        class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100">Building
-                        Number/Village</label>
-                    <div class="mt-2">
-                        <input id="building_number" name="building_number" type="text" required
-                            value="{{ old('building_number') }}"
-                            class="block w-full rounded-md border-0 px-4 py-2 text-gray-900 dark:text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-400 sm:text-sm sm:leading-6">
-                        @error('building_number')
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>

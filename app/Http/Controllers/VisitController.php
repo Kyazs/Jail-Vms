@@ -93,8 +93,9 @@ class VisitController extends Controller
             ->update(['status_id' => 1, 'check_in_time' => now()]);
         // Register the Action in the Auditlog
         $actionTypeId = 8;
+        $visit = DB::table('visits')->where('id', $id)->first();
         $auditLogController = new AuditLogController();
-        $auditLogController->logAudit(Auth::id(), $actionTypeId, $id, null, null, 'visit confirmed');
+        $auditLogController->logAudit(Auth::id(), $actionTypeId, $visit->visitor_id, $visit->inmate_id, $visit->id, 'visit confirmed');
         return redirect()->back()->with('success', 'Visit confirmed successfully');
     }
     public function reject_visit($id)
@@ -108,8 +109,9 @@ class VisitController extends Controller
             ]);
 
         $actionTypeId = 10;
+        $visit = DB::table('visits')->where('id', $id)->first();
         $auditLogController = new AuditLogController();
-        $auditLogController->logAudit(Auth::id(), $actionTypeId, $id, null, null, 'visit rejected');
+        $auditLogController->logAudit(Auth::id(), $actionTypeId, $visit->visitor_id, $visit->inmate_id, $id, 'visit rejected');
         return redirect()->back()->with('success', 'Visit rejected successfully');
     }
     public function force_end_visit($id)
@@ -119,11 +121,12 @@ class VisitController extends Controller
             ->update([
                 'status_id' => 2,
                 'check_out_time' => now(),
-                'duration' => DB::raw('TIMESTAMPDIFF(MINUTE, check_in_time, now())')
+                'visit_duration' => DB::raw('TIMESTAMPDIFF(MINUTE, check_in_time, now())')
             ]);
         $actionTypeId = 9;
+        $visit = DB::table('visits')->where('id', $id)->first();
         $auditLogController = new AuditLogController();
-        $auditLogController->logAudit(Auth::id(), $actionTypeId, $id, null, null, 'visit Force Ended');
+        $auditLogController->logAudit(Auth::id(), $actionTypeId, $visit->visitor_id, $visit->inmate_id, $visit->id, 'visit Force Ended');
         return redirect()->back()->with('info', 'Visit Force ended successfully');
     }
 
@@ -153,8 +156,38 @@ class VisitController extends Controller
                 'visit_status.status_name as status_name',
                 'visitors.contact_number',
                 'visitors.id as visitor_id',
-                'visitor_credentials.username as username'
+                'visitor_credentials.username as username',
+                'visits.visit_duration as duration',
+
             )
+            ->paginate(10);
+        return view('/admins/logs/completed', compact('records'));
+    }
+
+    public function sort_visits(Request $request)
+    {
+        $sortOrder = $request->input('sort-by', 'asc'); // Default to ascending order
+        $records = DB::table('visits')
+            ->join('inmates', 'visits.inmate_id', '=', 'inmates.id')
+            ->join('visitors', 'visits.visitor_id', '=', 'visitors.id')
+            ->join('visit_status', 'visits.status_id', '=', 'visit_status.id')
+            ->join('visitor_credentials', 'visitors.id', '=', 'visitor_credentials.visitor_id')
+            ->select(
+                DB::raw("CONCAT(visitors.first_name, ' ', visitors.last_name) as visitor_name"),
+                DB::raw("CONCAT(inmates.first_name, ' ', inmates.last_name) as inmate_name"),
+                DB::raw("CONCAT(visitors.address_city, ' ', visitors.address_barangay, ' ', visitors.address_province, ' ', visitors.country, ' ', visitors.address_zip) as address"),
+                DB::raw("DATE(visits.check_in_time) as date"),
+                DB::raw("TIME(visits.check_in_time) as check_in_time"),
+                DB::raw("TIME(visits.check_out_time) as check_out_time"),
+                'visits.id as visit_id',
+                'visits.relationship',
+                'visit_status.status_name as status_name',
+                'visitors.contact_number',
+                'visitors.id as visitor_id',
+                'visitor_credentials.username as username',
+                'visits.visit_duration as duration'
+            )
+            ->orderBy('visits.check_in_time', $sortOrder)
             ->paginate(10);
         return view('/admins/logs/completed', compact('records'));
     }

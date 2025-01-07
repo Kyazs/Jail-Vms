@@ -58,7 +58,7 @@ class ScannerController extends Controller
         // REGISTER ACTION IN AUDIT LOGS
         $actionTypeId = 10;
         $auditLogController = new AuditLogController();
-        $auditLogController->logAudit(null, $actionTypeId, Auth::id(), $inmate, $visitId, 'visit rejected');
+        $auditLogController->logAudit(null, $actionTypeId, Auth::id(), $inmateId, $visitId, 'Visitor Check In');
         return redirect()->route('landingpage')->with('success', 'Check-in successful! Proceed to the Officer for verification.');
     }
 

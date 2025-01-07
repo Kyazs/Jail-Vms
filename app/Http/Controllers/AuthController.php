@@ -39,15 +39,12 @@ class AuthController extends Controller
 
     public function Authenticate()
     {
-        if (Auth::check()) {
-            $user = Auth::user();
-            if (in_array($user->role_id, ['1', '2'])) {
-                return redirect()->route('admins.dashboard');
-            } else {
-                return redirect()->route('dashboard');
-            }
-        } else {
-            return redirect('/');
+        if (Auth::guard('visitor')->check()) {
+            return redirect()->route('dashboard');
         }
+        if (Auth::guard('web')->check()) {
+            return redirect()->route('admins.dashboard');
+        }
+        return view('welcome');
     }
 }

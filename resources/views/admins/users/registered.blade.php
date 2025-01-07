@@ -36,7 +36,7 @@
                 <tbody>
                     @foreach ($records as $rec)
                         <tr
-                            class="relative odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                            class="@if (isset($rec->deleted_at)) text-red-700 @endif relative odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                             <th scope="row"
                                 class="px-2 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 {{ $rec->visitor_id }} </th>
@@ -65,18 +65,36 @@
                                         </li>
                                         <li>
                                             <a href="#"
-                                                class="block px-3 py-1 text-red-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-red-500">Reset
-                                                Password</a>
+                                                onclick="toggleModal('viewPendingUserModal{{ $rec->visitor_id }}')"
+                                                class="block px-3 py-1 text-blue-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-yellow-500">Edit</a>
                                         </li>
                                         <li>
                                             <a href="#" onclick="toggleModal('addBlacklistModal')"
                                                 class="block px-3 py-1 text-purple-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-purple-500">Add
                                                 to Blacklist</a>
                                         </li>
+                                        @if ($rec->deleted_at == 0)
+                                            <li>
+                                                <a href="#" onclick="event.preventDefault(); if(confirm('Are you sure you want to delete this user?')) { document.getElementById('delete-form-{{ $rec->visitor_id }}').submit(); }"
+                                                    class="block px-3 py-1 text-red-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-red-500">Delete</a>
+                                                <form id="delete-form-{{ $rec->visitor_id }}" action="{{ route('visitor.delete', ['id' => $rec->visitor_id]) }}" method="POST" style="display: none;">
+                                                    @csrf
+                                                </form>
+                                            </li>
+                                        @else
+                                        <li>
+                                            <a href="#" onclick="event.preventDefault(); if(confirm('Are you sure you want to undelete this user?')) { document.getElementById('undelete-form-{{ $rec->visitor_id }}').submit(); }"
+                                                class="block px-3 py-1 text-green-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-green-500">Undelete</a>
+                                            <form id="undelete-form-{{ $rec->visitor_id }}" action="{{ route('visitor.undelete', ['id' => $rec->visitor_id]) }}" method="POST" style="display: none;">
+                                                @csrf
+                                            </form>
+                                        </li>
+                                        @endif
                                     </ul>
                                 </div>
                             </td>
                         </tr>
+                        @include('components.modals.update-register-visitor', ['record' => $rec])
                         @include('components.modals.add-blacklist', ['record' => $rec])
                     @endforeach
                 </tbody>

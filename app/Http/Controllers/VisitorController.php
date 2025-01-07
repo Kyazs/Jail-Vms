@@ -19,6 +19,10 @@ class VisitorController extends Controller
             return redirect()->route('login'); // Redirect to login if not authenticated
         }
 
+        if (is_null($visitor->email_verified_at)) {
+            return redirect()->route('verification.notice'); // Redirect to email notification if email is not verified
+        }
+
         $visitorId = $visitor->id;
         // Log the visitor ID to the server's error log
         error_log('Visitor ID: ' . $visitorId);
@@ -58,15 +62,21 @@ class VisitorController extends Controller
         }
         $visitorId = $visitor->id;
         // Retrieve the visitor's qr
-        $visitor = DB::table('visitor_qr_code')
+        $visitorQr = DB::table('visitor_qr_code')
             ->where('visitor_id', $visitorId)
             ->first();
-        return view('users.qr_code', ['visitor' => $visitor]);
+
+        if (!$visitorQr) {
+            $message = 'Your account is under verification';
+            return view('users.qr_code', ['visitor' => null, 'message' => $message]);
+        }
+
+        return view('users.qr_code', ['visitor' => $visitorQr, 'message' => null]);
     }
 
     public function getQrCode($filename)
     {
-        $path = storage_path('app/private/' . $filename);
+        $path = storage_path('app/private/qr_codes/' . $filename);
         if (!file_exists($path)) {
             abort(404);
         }

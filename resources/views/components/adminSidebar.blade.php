@@ -1,4 +1,7 @@
 <div class="h-full">
+    @php
+        $user = Auth::user();
+    @endphp
     <button data-drawer-target="sidebar-multi-level-sidebar" data-drawer-toggle="sidebar-multi-level-sidebar"
         aria-controls="sidebar-multi-level-sidebar" type="button"
         class="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
@@ -45,10 +48,12 @@
                         <x-ri-arrow-down-s-fill class="w-5 h-5 group-hover:text-gray-900 dark:group-hover:text-white" />
                     </button>
                     <ul id="dropdown-users" class="hidden py-2 space-y-2">
-                        <li>
-                            <a href="/admin/user/moderator"
-                                class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-200 dark:text-white dark:hover:bg-gray-600">Moderator</a>
-                        </li>
+                        @if ($user && $user->role_id == 1)
+                            <li>
+                                <a href="/admin/user/moderator"
+                                    class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-200 dark:text-white dark:hover:bg-gray-600">Moderator</a>
+                            </li>
+                        @endif
                         <li>
                             <a href="/admin/user/registered"
                                 class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-200 dark:text-white dark:hover:bg-gray-600">Registered
@@ -79,17 +84,17 @@
                     </button>
                     <ul id="dropdown-reports" class="hidden py-2 space-y-2">
                         <li>
-                            <a href="{{route('logs.pending')}}"
+                            <a href="{{ route('logs.pending') }}"
                                 class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-200 dark:text-white dark:hover:bg-gray-600">Pending
                                 Visits</a>
                         </li>
                         <li>
-                            <a href="{{route('logs.ongoing')}}"
+                            <a href="{{ route('logs.ongoing') }}"
                                 class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-200 dark:text-white dark:hover:bg-gray-600">Ongoing
                                 Visits</a>
                         </li>
                         <li>
-                            <a href="{{route('logs.completed')}}"
+                            <a href="{{ route('logs.completed') }}"
                                 class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-200 dark:text-white dark:hover:bg-gray-600">Completed
                                 Visits</a>
                         </li>
@@ -108,43 +113,33 @@
                     </button>
                     <ul id="dropdown-example" class="hidden py-2 space-y-2">
                         <li>
-                            <a href="#"
-                                class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-200 dark:text-white dark:hover:bg-gray-600">Weekly
+                            <a href="{{ route('analytics.daily') }}"
+                                class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-200 dark:text-white dark:hover:bg-gray-600">Daily
                                 Visits</a>
                         </li>
                         <li>
-                            <a href="#"
-                                class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Ongoing
+                            <a href="{{ route('analytics.weekly') }}"
+                                class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-600">Weekly
                                 Visits</a>
                         </li>
                         <li>
-                            <a href="#"
-                                class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Completed
+                            <a href="{{ route('analytics.monthly') }}"
+                                class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-600">Monthly
                                 Visits</a>
                         </li>
                     </ul>
                 </li>
-                @php
-                    $user = Auth::user();
-                @endphp
                 @if ($user && $user->role_id == 1)
-                <li>
-                    <a href="/admin/audit"
-                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 group">
-                        <i class="material-icons text-gray-400">description</i>
-                        <span class="flex-1 ms-3 whitespace-nowrap">Audit Log</span>
-                    </a>
-                </li>
+                    <li>
+                        <a href="/admin/audit"
+                            class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 group">
+                            <i class="material-icons text-gray-400">description</i>
+                            <span class="flex-1 ms-3 whitespace-nowrap">Audit Log</span>
+                        </a>
+                    </li>
                 @endif
                 <li>
-                    <a href="#"
-                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 group">
-                        <i class="material-icons text-gray-400">settings</i>
-                        <span class="flex-1 ms-3 whitespace-nowrap">Settings</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="/logout"
+                    <a href="/logouts"
                         class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 group">
                         <i class="material-icons text-gray-400">logout</i>
                         <span class="flex-1 ms-3 whitespace-nowrap">Logout</span>

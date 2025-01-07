@@ -18,6 +18,9 @@ class LoginController extends Controller
         if (Auth::guard('visitor')->check()) {
             return redirect()->route('dashboard');
         }
+        if (Auth::guard('web')->check()) {
+            return redirect()->route('admins.dashboard');
+        }
         return view('users.login'); // Assuming you have a login view
     }
 
@@ -37,9 +40,9 @@ class LoginController extends Controller
             if ($visitor->is_deleted == 1) {
                 return back()->withErrors(['username' => 'Your account has been deleted.']);
             }
-            if ($visitor->is_verified == 0) {
-                return back()->withErrors(['username' => 'Your account is pending verification.']);
-            }
+            // if ($visitor->is_verified == 0) {
+            //     return back()->withErrors(['username' => 'Your account is pending verification.']);
+            // }
             // Check if the visitor is blacklisted
             $blacklist = Blacklist::where('visitor_id', $visitor->visitor_id)->first();
             if ($blacklist) {
@@ -92,9 +95,11 @@ class LoginController extends Controller
     //Logout method
     public function logout(Request $request)
     {
+        Auth::guard('visitor')->logout(); // Ensure the visitor is logged out
+        Auth::guard('web')->logout(); // Ensure the admin is logged out
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect('/'); // Redirect to the home page or any other page
     }
 }

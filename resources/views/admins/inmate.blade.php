@@ -7,9 +7,11 @@
                 <button type="submit"
                     class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600">Search</button>
             </form>
-            <a href="#" onclick="toggleModal('addInmateModal')"
-                class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600">Add
-                Inmate</a>
+            @if (auth()->user()->role_id == 1)
+                <a href="#" onclick="toggleModal('addInmateModal')"
+                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600">Add
+                    Inmate</a>
+            @endif
         </div>
         @include('/components/modals/add-inmate-modal')
         <div class=" overflow-x-auto shadow-md sm:rounded-lg m-4">
@@ -53,26 +55,28 @@
                                 <div id="dropdown{{ $int->id }}"
                                     class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-32 dark:bg-gray-700 absolute mt-2 right-0">
                                     <ul class="py-2" aria-labelledby="dropdownDefaultButton">
-                                        <li>
-                                            <form action="{{ route('admin.inmate.delete', ['id' => $int->id]) }}"
-                                                method="POST"
-                                                onsubmit="return confirm('Are you sure you want to delete this inmate?');">
-                                                @csrf
-                                                <button type="submit"
-                                                    class="block w-full text-left px-3 py-1 text-red-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-red-500">
-                                                    Delete
-                                                </button>
-                                            </form>
-                                        </li>
-                                        <li>
-                                            <div class="mt-4">
-                                                <a href="#"
-                                                    onclick="toggleModal('InmateUpdateModal{{ $int->id }}')"
-                                                    class="block w-full text-left px-3 py-1 text-blue-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-blue-500">
-                                                    Update Inmate Information
-                                                </a>
-                                            </div>
-                                        </li>
+                                        @if (auth()->user()->role_id == 1)
+                                            <li>
+                                                <form action="{{ route('admin.inmate.delete', ['id' => $int->id]) }}"
+                                                    method="POST"
+                                                    onsubmit="return confirm('Are you sure you want to delete this inmate?');">
+                                                    @csrf
+                                                    <button type="submit"
+                                                        class="block w-full text-left px-3 py-1 text-red-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-red-500">
+                                                        Delete
+                                                    </button>
+                                                </form>
+                                            </li>
+                                            <li>
+                                                <div class="mt-4">
+                                                    <a href="#"
+                                                        onclick="toggleModal('InmateUpdateModal{{ $int->id }}')"
+                                                        class="block w-full text-left px-3 py-1 text-blue-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-blue-500">
+                                                        Update Inmate Information
+                                                    </a>
+                                                </div>
+                                            </li>
+                                        @endif
                                     </ul>
                                 </div>
                             </td>
