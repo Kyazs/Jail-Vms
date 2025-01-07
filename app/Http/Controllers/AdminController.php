@@ -45,6 +45,7 @@ class AdminController extends Controller
                 DB::raw("CONCAT(visitors.address_city, ' ', visitors.address_barangay, ' ', visitors.address_province, ' ', visitors.country, ' ', visitors.address_zip) as address")
             )
             ->where('visitors.is_verified', '=', '1')
+            ->where('visitors.is_admin_confirmed', '=', '1')
             ->whereNull('blacklist.id') // Exclude if there's any active blacklist entry
             ->paginate(10);
 
@@ -126,9 +127,11 @@ class AdminController extends Controller
                 DB::raw("CONCAT(visitors.address_city, ' ', visitors.address_barangay, ' ', visitors.address_province, ' ', visitors.country, ' ', visitors.address_zip) as address")
             )
             ->where('visitors.is_verified', '=', '0')
+            ->orWhere('is_admin_confirmed', '=', '0')
             ->paginate(10);
         return view('admins.users.pending', compact('records'));
     }
+    
     // confirm the pending visitor
     // generate qr code for the visitor
     public function confirm_visitor($id)
