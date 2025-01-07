@@ -5,6 +5,8 @@
 - In the XAMPP folder (`c:\xampp\php\php.ini`), remove the semicolon (`;`) from the line `extension=gd`
 
 ## Guide
+- first git clone my repo https://github.com/Kyazs/Jail-Vms
+- make sure your in the main branch or Backend/login-signup
 
 1. Run `composer install`
 2. Copy `.env.example` to the root folder and rename it to `.env`
