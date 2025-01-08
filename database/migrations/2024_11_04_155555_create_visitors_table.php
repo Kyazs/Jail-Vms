@@ -29,7 +29,6 @@ return new class extends Migration
             $table->text('id_document_path');
             $table->timestamp('email_verified_at')->nullable();
             $table->boolean('is_verified')->default(false);
-            $table->boolean('is_admin_confirmed')->default(false);
             $table->timestamps(); // Adds created_at and updated_at columns
             $table->softDeletes(); // Adds deleted_at column for soft deletes
 
