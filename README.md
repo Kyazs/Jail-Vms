@@ -1,16 +1,47 @@
+# Accessing the Project Files
+    If the extraction of the zip file fails, proceed with cloning the GitHub repository.
+    else skip the cloning of the Repository
+    
+## Steps to Clone the Repository
+
+1. Ensure you have Git installed on your system. If not, download it [here](https://git-scm.com/downloads).
+2. Open your terminal or command prompt.
+3. Run the following command to clone the repository:
+
+    ```sh
+    git clone https://github.com/Kyazs/Jail-Vms.git
+    ```
+
+4. Navigate to the project directory:
+
+    ```sh
+    cd Jail-Vms
+    ```
+
+5. Follow the setup instructions provided below to configure the project.
+
 ## Requirements
 
 - Visual Studio Code (VSCode)
 - XAMPP
-- In the XAMPP folder (`c:\xampp\php\php.ini`), remove the semicolon (`;`) from the line `extension=gd`
+- Composer
+- In the XAMPP folder (`c:\xampp\php\php.ini`), remove the semicolon (`;`) from the line `extension=gd`.
 
 ## Guide
-- first git clone my repo https://github.com/Kyazs/Jail-Vms
-- make sure your in the main branch or Backend/login-signup
 
-1. Run `composer install`
-2. Copy `.env.example` to the root folder and rename it to `.env`
-3. Update the `.env` file with the following content:
+1. First, clone the repository:
+
+    ```sh
+    git clone https://github.com/Kyazs/Jail-Vms/
+    ```
+
+2. Make sure you are in the `main` branch or `Backend/login-signup`.
+
+3. Run `composer install`.
+
+4. Copy `.env.example` to the root folder and rename it to `.env`.
+
+5. Update the `.env` file with the following content:
 
     ```env
     APP_NAME=Laravel
@@ -84,7 +115,7 @@
     VITE_APP_NAME="${APP_NAME}"
     ```
 
-4. Run the following commands:
+6. Run the following commands:
 
     ```sh
     php artisan key:generate
