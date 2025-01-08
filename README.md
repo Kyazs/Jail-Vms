@@ -1,7 +1,7 @@
 # Accessing the Project Files
-
-Due to the large size of the system files, I am unable to provide them directly through Google Drive. Instead, you can access the full project by cloning our GitHub repository.
-
+    If the extraction of the zip file fails, proceed with cloning the GitHub repository.
+    else skip the cloning of the Repository
+    
 ## Steps to Clone the Repository
 
 1. Ensure you have Git installed on your system. If not, download it [here](https://git-scm.com/downloads).
@@ -24,6 +24,7 @@ Due to the large size of the system files, I am unable to provide them directly 
 
 - Visual Studio Code (VSCode)
 - XAMPP
+- Composer
 - In the XAMPP folder (`c:\xampp\php\php.ini`), remove the semicolon (`;`) from the line `extension=gd`.
 
 ## Guide
@@ -31,10 +32,10 @@ Due to the large size of the system files, I am unable to provide them directly 
 1. First, clone the repository:
 
     ```sh
-    git clone https://github.com/Kyazs/Jail-Vms.git
+    git clone https://github.com/Kyazs/Jail-Vms/
     ```
 
-2. Make sure you are in the main branch or `Backend/login-signup`.
+2. Make sure you are in the `main` branch or `Backend/login-signup`.
 
 3. Run `composer install`.
 
