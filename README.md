@@ -100,10 +100,10 @@
     MAIL_MAILER=smtp
     MAIL_HOST=smtp.gmail.com
     MAIL_PORT=465
-    MAIL_USERNAME=santosjohncasper@gmail.com
-    MAIL_PASSWORD=oxadufbsbwlqldda
+    MAIL_USERNAME=
+    MAIL_PASSWORD=
     MAIL_ENCRYPTION=ssl
-    MAIL_FROM_ADDRESS="johncasper.bit@gmail.com"
+    MAIL_FROM_ADDRESS=""
     MAIL_FROM_NAME="Jail-Vms"
 
     AWS_ACCESS_KEY_ID=
